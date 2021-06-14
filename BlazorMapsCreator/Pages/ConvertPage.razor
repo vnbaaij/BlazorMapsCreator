@@ -1,6 +1,23 @@
 ﻿@page "/ConvertPage"
-<h3>Upload a Drawing Package</h3>
+<h3>Convert a Drawing Package</h3>
 
-@code {
+<Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
+    <StackItem>
+        <DefaultButton @onclick="ConvertPackage" Disabled="@convertButtonDisabled">Convert Drawing Package</DefaultButton>
+    </StackItem>
+    <StackItem>
+        <DefaultButton @onclick="ConvertPackageStatus" Disabled="@statusButtonDisabled">Convert Status</DefaultButton>
+    </StackItem>
+    
+</Stack>
 
-}
+<h4>Values used:</h4>
+
+<div>
+    Selected geography: @(geography ?? "none")<br />
+    Key: @subscriptionkey<br />
+    <hr />
+    Upload Identifier: @uploadUdid<br />
+    Convert Identifier: @convertUdid<br />
+</div>
+

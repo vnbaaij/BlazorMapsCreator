@@ -1,23 +1,26 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Net.Http;
 
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Hosting;
 
 using RestSharp;
-using Microsoft.Extensions.Logging;
 
 namespace BlazorMapsCreator.Pages
 {
     public partial class UploadPage
     {
-        bool uploadButtonDisabled = true;
-        bool metadataButtonDisabled = true;
-        bool deleteButtonDisabled = true;
+
+        [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
+        [Inject] IWebHostEnvironment Environment { get; set; }
+
+        private bool uploadButtonDisabled = true;
+        private bool metadataButtonDisabled = true;
+        private bool deleteButtonDisabled = true;
         private string geography;
         private string subscriptionkey;
         private string statusUrl;
@@ -28,10 +31,8 @@ namespace BlazorMapsCreator.Pages
         {
             if (firstRender)
             {
-                //await localStorage.SetItemAsync("name", "Azure Maps Creator");
-                geography = await localStorage.GetItemAsync<string>("geography");
-                //await localStorage.SetItemAsync("name", "Azure Maps Creator");
-                subscriptionkey = await localStorage.GetItemAsync<string>("subscriptionkey");
+                geography = await LocalStorage.GetItemAsync<string>("geography");
+                subscriptionkey = await LocalStorage.GetItemAsync<string>("subscriptionkey");
                 StateHasChanged();
             }
         }
@@ -73,7 +74,7 @@ namespace BlazorMapsCreator.Pages
             if (response.IsSuccessful)
             {
                 statusUrl = response.Headers.FirstOrDefault(p => p.Name == "Operation-Location").Value.ToString();
-                await localStorage.SetItemAsync("statusUrl", statusUrl);
+                await LocalStorage.SetItemAsync("statusUrl", statusUrl);
                 uploadButtonDisabled = false;
             }
         }
@@ -81,7 +82,7 @@ namespace BlazorMapsCreator.Pages
         public async Task MapDataUploadStatus()
         {
             if (string.IsNullOrEmpty(statusUrl))
-                statusUrl = await localStorage.GetItemAsync<string>("statusUrl");
+                statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
             var client = new RestClient($"{statusUrl}&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
@@ -95,7 +96,7 @@ namespace BlazorMapsCreator.Pages
                 {
                     Uri resourceLocation = new(para.Value.ToString());
                     udid = resourceLocation.Segments[^1];
-                    await localStorage.SetItemAsync("udid", udid);
+                    await LocalStorage.SetItemAsync("upload-udid", udid);
                     metadataButtonDisabled = false;
                     deleteButtonDisabled = false;
                 }
@@ -111,7 +112,7 @@ namespace BlazorMapsCreator.Pages
         public async Task MapDataMetadata()
         {
             if (string.IsNullOrEmpty(udid))
-                udid = await localStorage.GetItemAsync<string>("udid");
+                udid = await LocalStorage.GetItemAsync<string>("upload-udid");
             var client = new RestClient($"https://{geography}.atlas.microsoft.com/mapData/metadata/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
             {
                 Timeout = -1

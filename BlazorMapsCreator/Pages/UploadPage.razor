@@ -1,6 +1,5 @@
 ﻿@page "/UploadPage"
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
-@inject IWebHostEnvironment Environment
+
 @using System
 @using System.IO
 @using System.Text
@@ -11,7 +10,7 @@
 
 <p>
 <label>
-    Upload a zip file containing the DWG files and a manifest.json:<br />
+    Upload a zip file containing the DWG files and a manifest.json:<br /><br />
     <InputFile OnChange="@LoadFile" />
 </label>
 </p>
