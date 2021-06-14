@@ -1,0 +1,35 @@
+﻿@using BlazorFluentUI.Routing
+<Stack Horizontal="false" VerticalFill="true" Style="overflow:hidden;">
+    <StackItem Grow="0" VerticalFill="false" Style="padding-left: 30px">
+        <div class="top-row">
+            <Link Href="/"><i class="ms-Icon ms-Icon--Home"></i> Home</Link>
+        </div>
+    </StackItem>
+    <StackItem VerticalFill="true" Style="overflow-y:auto;">
+        <Nav>
+            <NavLinkGroup Name="Steps" CollapseByDefault="false">
+                <BlazorFluentUI.Routing.NavLink Name="Upload" Url="uploadPage" Id="uploadPage" IconName="CloudUpload" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Convert" Url="convertPage" Id="convertPage" IconName="ChangeEntitlements" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Dataset" Url="datasetPage" Id="datasetPage" IconName="StreamingDataset" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Tileset" Url="tilesetPage" Id="tilesetPage" IconName="PictureTile" OnClick=@OnLinkClicked />
+
+                <BlazorFluentUI.Routing.NavLink Name="Query" Url="queryPage" Id="queryPage" IconName="QueryList" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Feature" Url="featurePage" Id="featurePage" IconName="HistoricalWeather" OnClick=@OnLinkClicked />
+            </NavLinkGroup>
+        </Nav>
+    </StackItem>
+</Stack>
+
+@code {
+
+    [Parameter] public EventCallback<BlazorFluentUI.Routing.NavLink> OnLinkClicked { get; set; }
+
+    bool collapseNavMenu = true;
+
+    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

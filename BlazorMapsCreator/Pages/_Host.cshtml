@@ -1,0 +1,29 @@
+﻿@page "/"
+@namespace BlazorMapsCreator.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlazorCreator</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
+    <link rel="stylesheet" href="css/fabric-icons-inline.css" /> <!--These are icons for nav not automatically included in the above css.-->
+
+    <link href="BlazorMapsCreator.styles.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <script src="_content/BlazorFluentUI.CoreComponents/richTextEditor.js"></script>
+</head>
+<body>
+    <app><component type="typeof(App)" render-mode="ServerPrerendered" /></app>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>
