@@ -11,15 +11,14 @@ namespace BlazorMapsCreator.Pages
     public partial class ConvertPage
     {
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
-        [Inject] IWebHostEnvironment Environment { get; set; }
-
+        
         private bool convertButtonDisabled = true;
         private bool statusButtonDisabled = true;
         private string geography;
         private string subscriptionkey;
         private string statusUrl;
         private string uploadUdid;
-        private string convertUdid;
+        private string conversionUdid;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -38,11 +37,11 @@ namespace BlazorMapsCreator.Pages
             if (string.IsNullOrEmpty(uploadUdid))
                 uploadUdid = await LocalStorage.GetItemAsync<string>("upload-udid");
 
-            var client = new RestClient($"https://{geography}.atlas.microsoft.com/conversions?subscription-key={subscriptionkey}&api-version=2.0&udid={uploadUdid}&inputType=DWG&outputOntology=facility-2.0")
+            RestClient client = new($"https://{geography}.atlas.microsoft.com/conversions?subscription-key={subscriptionkey}&api-version=2.0&udid={uploadUdid}&inputType=DWG&outputOntology=facility-2.0")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.POST);
+            RestRequest request = new(Method.POST);
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
@@ -57,11 +56,11 @@ namespace BlazorMapsCreator.Pages
         {
             if (string.IsNullOrEmpty(statusUrl))
                 statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
-            var client = new RestClient($"{statusUrl}&subscription-key={subscriptionkey}")
+            RestClient client = new($"{statusUrl}&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.GET);
+            RestRequest request = new(Method.GET);
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
@@ -69,12 +68,12 @@ namespace BlazorMapsCreator.Pages
                 if (para is not null)
                 {
                     Uri resourceLocation = new(para.Value.ToString());
-                    convertUdid = resourceLocation.Segments[^1];
-                    await LocalStorage.SetItemAsync("convert-udid", convertUdid);
+                    conversionUdid = resourceLocation.Segments[^1];
+                    await LocalStorage.SetItemAsync("conversion-udid", conversionUdid);
                 }
                 else
                 {
-                    convertUdid = "checking again in 5 seconds...";
+                    conversionUdid = "checking again in 5 seconds...";
                     await Task.Delay(5000);
                     await ConvertPackageStatus();
                 }

@@ -63,11 +63,11 @@ namespace BlazorMapsCreator.Pages
         {
             byte[] mapBytes = File.ReadAllBytes(path);
 
-            var client = new RestClient($"https://{geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat=dwgzippackage&subscription-key={subscriptionkey}")
+            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat=dwgzippackage&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.POST);
+            RestRequest request = new(Method.POST);
             request.AddHeader("Content-Type", "application/octet-stream");
             request.AddParameter("", mapBytes, ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
@@ -83,11 +83,11 @@ namespace BlazorMapsCreator.Pages
         {
             if (string.IsNullOrEmpty(statusUrl))
                 statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
-            var client = new RestClient($"{statusUrl}&subscription-key={subscriptionkey}")
+            RestClient client = new($"{statusUrl}&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.GET);
+            RestRequest request = new(Method.GET);
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
@@ -113,11 +113,11 @@ namespace BlazorMapsCreator.Pages
         {
             if (string.IsNullOrEmpty(udid))
                 udid = await LocalStorage.GetItemAsync<string>("upload-udid");
-            var client = new RestClient($"https://{geography}.atlas.microsoft.com/mapData/metadata/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
+            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData/metadata/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.GET);
+            RestRequest request = new(Method.GET);
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
@@ -127,11 +127,11 @@ namespace BlazorMapsCreator.Pages
 
         private void MapDataDelete()
         {
-            var client = new RestClient($"https://{geography}.atlas.microsoft.com/mapData/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
+            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
-            var request = new RestRequest(Method.DELETE);
+            RestRequest request = new(Method.DELETE);
             IRestResponse response = client.Execute(request);
 
             if (response.IsSuccessful)

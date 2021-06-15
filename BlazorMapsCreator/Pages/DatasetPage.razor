@@ -1,4 +1,23 @@
 ﻿@page "/DatasetPage"
 <h3>Create a Dataset</h3>
 
+<Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
+    <StackItem>
+        <DefaultButton @onclick="CreateDataset" Disabled="@createButtonDisabled">Create Dataset</DefaultButton>
+    </StackItem>
+    <StackItem>
+        <DefaultButton @onclick="CreateDatasetStatus" Disabled="@statusButtonDisabled">Create Dataset Status</DefaultButton>
+    </StackItem>
+    
+</Stack>
+
+<h4>Values used:</h4>
+
+<div>
+    Selected geography: @(geography ?? "none")<br />
+    Key: @subscriptionkey<br />
+    <hr />
+    Conversion Identifier: @conversionUdid<br />
+    Dataset Identifier: @datasetUdid<br />
+</div>
 

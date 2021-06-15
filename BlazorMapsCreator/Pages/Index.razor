@@ -25,7 +25,7 @@ Welcome to the Azure Maps Creator app. Follow the steps below in order to genera
 			<ChoiceGroup Label="Geography" ItemsSource="_geographies" @bind-Value="geography" Required="true"></ChoiceGroup>
 		</StackItem>
 		<StackItem>
-			<TextField Label="Subscription key" @bind-Value="@subscriptionkey" Required="true">
+			<TextField Label="Subscription key" @bind-Value="@subscriptionkey" Required="true" InputType="InputType.Password" >
 				<PrefixContent>
 					<Icon IconName="AzureKeyVault" />
 				</PrefixContent>

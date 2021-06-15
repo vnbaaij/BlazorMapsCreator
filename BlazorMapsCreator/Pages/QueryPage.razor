@@ -1,4 +1,33 @@
 ﻿@page "/QueryPage"
-<h3>Query a Dataset with WFS</h3>
+<h3>Query a Dataset with Web Feature Service</h3>
 
+<Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
+    <StackItem>
+        <DefaultButton @onclick="QueryAllCollections">Query all collections</DefaultButton>
+    </StackItem>
+    <StackItem>
+        <DefaultButton @onclick="QueryUnitCollection">Query unit collection</DefaultButton>
+    </StackItem>
 
+</Stack>
+
+<h4>Values used:</h4>
+
+<div>
+    Selected geography: @(geography ?? "none")<br />
+    Key: @subscriptionkey<br />
+    <hr />
+    <h5>Query results</h5>
+    All collections:<br />
+    @allCollections
+    <br />
+
+    Unit collections:<br />
+    @unitCollection
+</div>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <hr />
+    <MessageBar MessageBarType="MessageBarType.Error">@errorMessage</MessageBar>
+}
