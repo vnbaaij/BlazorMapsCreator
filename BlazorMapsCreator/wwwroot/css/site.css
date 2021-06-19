@@ -38,6 +38,11 @@ app {
     flex-direction: column;
 }
 
+#map {
+    width: 100%;
+    min-width: 290px;
+    height: 800px;
+}
 .modalContainerOverride {
     height: 80vh;
     width: 80vh;
@@ -187,7 +192,8 @@ app {
 }
 
 .sectionWrapper {
-    max-width: 1080px
+    max-width: 1080px;
+    min-height:850px;
 }
 
 .section {
@@ -199,7 +205,6 @@ app {
     -webkit-box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
     box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
     position: relative;
-    //opacity: 0;
     -webkit-transform: translate3d(0,48px,0);
     transform: translate3d(0,48px,0);
     -webkit-transition: opacity .3s cubic-bezier(.1,.9,.2,1) 50ms,-webkit-transform .3s cubic-bezier(.1,.9,.2,1);
@@ -244,7 +249,6 @@ app {
 }
 
 .section ul.uListFlex > .uThird {
-    -ms-flex-preferred-size: calc(33% - 28px);
     flex-basis: calc(33% - 28px)
 }
 
@@ -495,7 +499,6 @@ ul.md-list--flex li {
 }
 
 ul.md-list--flex > .mdut--full {
-    -ms-flex-preferred-size: 100%;
     flex-basis: 100%
 }
 
@@ -508,7 +511,6 @@ ul.md-list--flex > .mdut--full {
 }
 
 ul.md-list--flex > .mdut--half {
-    -ms-flex-preferred-size: calc(50% - 28px);
     flex-basis: calc(50% - 28px)
 }
 
@@ -641,11 +643,9 @@ ul.md-list--flex > .mdut--half {
 
 .siteWrapper {
     -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     margin: 0 auto;
     width: 100%;
-    /*max-width: 1650px;*/
     position: relative;
     display: -webkit-box;
     display: -ms-flexbox;

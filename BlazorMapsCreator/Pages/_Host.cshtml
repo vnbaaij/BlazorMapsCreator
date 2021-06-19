@@ -14,15 +14,20 @@
     <base href="~/" />
     <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/11.0.0/css/fabric.min.css" />
     <link rel="stylesheet" href="css/fabric-icons-inline.css" /> <!--These are icons for nav not automatically included in the above css.-->
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
 
     <link href="BlazorMapsCreator.styles.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
 
 
 </head>
-<body onload="GetMap()">
+<body>
     <app><component type="typeof(App)" render-mode="ServerPrerendered" /></app>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/indoor/0.1/atlas-indoor.js"></script>
+    <script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
+
 </body>
 </html>

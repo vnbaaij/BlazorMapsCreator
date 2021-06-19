@@ -6,17 +6,13 @@
         <DefaultButton @onclick="ConvertPackage" Disabled="@convertButtonDisabled">Convert Drawing Package</DefaultButton>
     </StackItem>
     <StackItem>
-        <DefaultButton @onclick="ConvertPackageStatus" Disabled="@statusButtonDisabled">Convert Status</DefaultButton>
+        <DefaultButton @onclick="ConvertPackageStatus">Convert Status</DefaultButton>
     </StackItem>
     
 </Stack>
 
-<h4>Values used:</h4>
-
+<hr />
 <div>
-    Selected geography: @(geography ?? "none")<br />
-    Key: @subscriptionkey<br />
-    <hr />
     Upload Identifier: @uploadUdid<br />
     Convert Identifier: @conversionUdid<br />
 </div>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 using RestSharp;
 
@@ -14,7 +15,7 @@ namespace BlazorMapsCreator.Pages
 {
     public partial class UploadPage
     {
-
+        [Inject] IConfiguration Configuration { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
         [Inject] IWebHostEnvironment Environment { get; set; }
 
@@ -27,12 +28,13 @@ namespace BlazorMapsCreator.Pages
         private string udid;
         private MapDataMetadata metadata;
         private readonly long maxFileSize = 1024 * 1024 * 10;
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)
             {
-                geography = await LocalStorage.GetItemAsync<string>("geography");
-                subscriptionkey = await LocalStorage.GetItemAsync<string>("subscriptionkey");
+                geography = Configuration["AzureMaps:Geography"];
+                subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+
                 StateHasChanged();
             }
         }
@@ -102,8 +104,8 @@ namespace BlazorMapsCreator.Pages
                 }
                 else
                 {
-                    udid = "checking again in 5 seconds...";
-                    await Task.Delay(5000);
+                    udid = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
                     await MapDataUploadStatus();
                 }
             }

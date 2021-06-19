@@ -1,13 +1,17 @@
-using Microsoft.AspNetCore.Components;
-using RestSharp;
-using System.Threading.Tasks;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
+
+using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
     public partial class TilesetPage
     {
+        [Inject] IConfiguration Configuration { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
 
         private bool createButtonDisabled = true;
@@ -22,14 +26,15 @@ namespace BlazorMapsCreator.Pages
         {
             if (firstRender)
             {
-                geography = await LocalStorage.GetItemAsync<string>("geography");
-                subscriptionkey = await LocalStorage.GetItemAsync<string>("subscriptionkey");
+                geography = Configuration["AzureMaps:Geography"];
+                subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+
                 datasetUdid = await LocalStorage.GetItemAsync<string>("dataset-udid");
                 createButtonDisabled = false;
 
-                tilesetUdid = await LocalStorage.GetItemAsync<string>("tileset-udid");
-                if (!string.IsNullOrEmpty(tilesetUdid))
-                    statusButtonDisabled = false;
+                //tilesetUdid = await LocalStorage.GetItemAsync<string>("tileset-udid");
+                //if (!string.IsNullOrEmpty(tilesetUdid))
+                statusButtonDisabled = false;
                 StateHasChanged();
             }
         }
@@ -58,7 +63,7 @@ namespace BlazorMapsCreator.Pages
         {
             if (string.IsNullOrEmpty(statusUrl))
                 statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
-            
+
             RestClient client = new($"{statusUrl}&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
@@ -76,8 +81,8 @@ namespace BlazorMapsCreator.Pages
                 }
                 else
                 {
-                    tilesetUdid = "checking again in 5 seconds...";
-                    await Task.Delay(5000);
+                    tilesetUdid = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
                     await CreateTilesetStatus();
                 }
             }
@@ -87,14 +92,14 @@ namespace BlazorMapsCreator.Pages
         {
             if (string.IsNullOrEmpty(tilesetUdid))
                 tilesetUdid = await LocalStorage.GetItemAsync<string>("tileset-udid");
-            
+
             RestClient client = new($"https://{geography}.atlas.microsoft.com/map/tile?subscription-key={subscriptionkey}&api-version=2.0&tilesetId={tilesetUdid}&zoom=6&x=10&y=22")
             {
                 Timeout = -1
             };
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
-            
+
             if (response.IsSuccessful)
             {
                 var para = response.Headers.FirstOrDefault(p => p.Name == "Resource-Location");
@@ -106,8 +111,8 @@ namespace BlazorMapsCreator.Pages
                 }
                 else
                 {
-                    tilesetUdid = "checking again in 5 seconds...";
-                    await Task.Delay(5000);
+                    tilesetUdid = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
 
                 }
             }

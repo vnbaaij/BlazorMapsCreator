@@ -10,32 +10,15 @@
 Welcome to the Azure Maps Creator app. Follow the steps below in order to generate a private indoor map
 
 <ol>
-	<li>Upload the floor plans</li>
+	<li>Upload the floor plans<br /> (Currently only works with this <a href='https://github.com/Azure-Samples/am-creator-indoor-data-examples/blob/master/Sample%20-%20Contoso%20Drawing%20Package.zip'>Sample Drawing Package</a>)</li>
 	<li>Convert them to map data</li>
 	<li>Create a collection of map features (Dataset)</li>
 	<li>Create a set of vector tiles that render on the map</li>
-	<li>Run a query on the dataset</li>
+	<li>Run queries on the dataset</li>
 	<li>Create a dynamic property and values on specific features that support them (Occupancy of a room)</li>
 </ol>
 
-<h3>Settings:</h3>
-<div class="textFieldDiv">
-	<Stack Tokens=@(new StackTokens() { ChildrenGap = new[] { 15.0 } })>
-		<StackItem>
-			<ChoiceGroup Label="Geography" ItemsSource="_geographies" @bind-Value="geography" Required="true"></ChoiceGroup>
-		</StackItem>
-		<StackItem>
-			<TextField Label="Subscription key" @bind-Value="@subscriptionkey" Required="true" InputType="InputType.Password" >
-				<PrefixContent>
-					<Icon IconName="AzureKeyVault" />
-				</PrefixContent>
-			</TextField>
-		</StackItem>
-		<StackItem Align="Alignment.End">
-			<PrimaryButton @onclick="Save">Save</PrimaryButton>
-		</StackItem>
-	</Stack>
-</div>
+
 
 
 

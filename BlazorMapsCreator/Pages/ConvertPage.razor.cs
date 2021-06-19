@@ -1,19 +1,21 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
-
-using RestSharp;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
+
+using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
     public partial class ConvertPage
     {
+        [Inject] IConfiguration Configuration { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
-        
+
         private bool convertButtonDisabled = true;
-        private bool statusButtonDisabled = true;
+
         private string geography;
         private string subscriptionkey;
         private string statusUrl;
@@ -24,8 +26,9 @@ namespace BlazorMapsCreator.Pages
         {
             if (firstRender)
             {
-                geography = await LocalStorage.GetItemAsync<string>("geography");
-                subscriptionkey = await LocalStorage.GetItemAsync<string>("subscriptionkey");
+                geography = Configuration["AzureMaps:Geography"];
+                subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+
                 uploadUdid = await LocalStorage.GetItemAsync<string>("upload-udid");
                 convertButtonDisabled = false;
                 StateHasChanged();
@@ -48,7 +51,7 @@ namespace BlazorMapsCreator.Pages
                 statusUrl = response.Headers.FirstOrDefault(p => p.Name == "Operation-Location").Value.ToString();
                 await LocalStorage.SetItemAsync("statusUrl", statusUrl);
 
-                statusButtonDisabled = false;
+
             }
         }
 
@@ -73,8 +76,8 @@ namespace BlazorMapsCreator.Pages
                 }
                 else
                 {
-                    conversionUdid = "checking again in 5 seconds...";
-                    await Task.Delay(5000);
+                    conversionUdid = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
                     await ConvertPackageStatus();
                 }
             }

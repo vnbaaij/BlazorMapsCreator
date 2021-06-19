@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 using RestSharp;
 
@@ -11,8 +11,9 @@ namespace BlazorMapsCreator.Pages
 {
     public partial class DatasetPage
     {
+        [Inject] IConfiguration Configuration { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
-        
+
         private bool createButtonDisabled = true;
         private bool statusButtonDisabled = true;
         private string geography;
@@ -25,10 +26,11 @@ namespace BlazorMapsCreator.Pages
         {
             if (firstRender)
             {
-                geography = await LocalStorage.GetItemAsync<string>("geography");
-                subscriptionkey = await LocalStorage.GetItemAsync<string>("subscriptionkey");
+                geography = Configuration["AzureMaps:Geography"];
+                subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+
                 conversionUdid = await LocalStorage.GetItemAsync<string>("conversion-udid");
-                
+
                 createButtonDisabled = false;
 
                 datasetUdid = await LocalStorage.GetItemAsync<string>("dataset-udid");
@@ -79,8 +81,8 @@ namespace BlazorMapsCreator.Pages
                 }
                 else
                 {
-                    datasetUdid = "checking again in 5 seconds...";
-                    await Task.Delay(5000);
+                    datasetUdid = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
                     await CreateDatasetStatus();
                 }
             }

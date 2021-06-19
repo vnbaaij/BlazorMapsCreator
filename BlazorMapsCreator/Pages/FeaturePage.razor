@@ -1,27 +1,47 @@
 ﻿@page "/FeaturePage"
-<h3>Create a Feature stateset</h3>
+<h3>Working with Feature statesets</h3>
+<p>To work with a feature stateset, a dataset needs to be defined first. After that a sateset needs to be created </p>
+<div>
+    Dataset Identifier: @(datasetUdid ?? "-")<br />
+    Stateset Identifier: @(statesetUdid ?? "-")<br />
+</div>
 
-<Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
+<Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="margin-top:25px; margin-bottom:25px; width:100%;">
     <StackItem>
         <DefaultButton @onclick="CreateStateset">Create Stateset</DefaultButton>
     </StackItem>
     <StackItem>
         <DefaultButton @onclick="UpdateFeaturestate">Update Feature State</DefaultButton>
     </StackItem>
-    
+
 </Stack>
 
-<h4>Values used:</h4>
 
-<div>
-    Selected geography: @(geography ?? "none")<br />
-    Key: @subscriptionkey<br />
-    <hr />
-    Dataset Identifier: @datasetUdid<br />
-    Stateset Identifier: @statesetUdid<br />
-</div>
-@if (!string.IsNullOrEmpty(message))
+@if (units?.Length > 0)
 {
-    <hr />
+    <Stack Tokens="@(new StackTokens() { ChildrenGap = new [] {10d}})">
+        @{
+
+            @for (int i = 0; i < units.Length; i++)
+            {
+                int j = i;
+                <StackItem>
+                    <Toggle InlineLabel="true" @bind-Checked=unitOccupied[j] OnText="occupied" OffText="free" >
+                        <CustomLabel>
+                           @units[j] is
+                        </CustomLabel>
+                        </Toggle>
+                </StackItem>
+
+            }
+        }
+    </Stack>
+    <DefaultButton @onclick="UpdateFeaturestates">Update Feature States</DefaultButton>
+}
+
+<hr />
+@foreach (string message in messages)
+{
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
 }
+
