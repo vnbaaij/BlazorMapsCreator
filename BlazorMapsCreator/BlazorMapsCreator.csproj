@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.15.0" />
-    <PackageReference Include="Azure.Core.Experimental" Version="0.1.0-preview.13" />
     <PackageReference Include="AzureMapsControl.Components" Version="1.8.0" />
     <PackageReference Include="BlazorFluentUI.CoreComponents" Version="5.3.3-CI-20210614-084251" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0-preview.5.*" />
