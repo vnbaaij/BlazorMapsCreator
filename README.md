@@ -11,7 +11,7 @@ A simple GUI PoC for Azure Maps Creator built with Blazor and Fluent UI
 5. You will need to be able to compile with .NET 6 Preview 5 (at the moment). Please ensure this version is installed on your machine. If a newer version is released, follow the steps to upgrade in the announcement blog post.
 
 ### Set up your environment
-- For the app to work, you will need configure your azure maps. Under `BlazorMapoCreator\BlazorMapsCreator`, create a `appsettings.Development.json` file. This will be automatically ignored by the `.gitignore` file, so you can safely store your authentication information in it. **Please be sure not to host any of your keys on your GitHub repository**. The app expects the configuration to be found under an `AzureMaps` entry, so your file should contain at least the following : 
+- For the app to work, you will need configure your azure maps. Under `BlazorMapoCreator\BlazorMapsCreator` in your cloned version of this repo, create a `appsettings.Development.json` file. This will be automatically ignored by the `.gitignore` file, so you can safely store your authentication information in it. **Please be sure not to host any of your keys on your GitHub repository**. The app expects the configuration to be found under an `AzureMaps` entry, so your file should contain at least the following : 
 
 ```
 {
