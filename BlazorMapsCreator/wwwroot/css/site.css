@@ -192,7 +192,7 @@ app {
 }
 
 .sectionWrapper {
-    max-width: 1080px;
+    max-width: 1800px;
     min-height:850px;
 }
 
@@ -423,7 +423,7 @@ app {
         -webkit-box-flex: 1;
         -ms-flex: 1 auto;
         flex: 1 auto;
-        max-width: 1080px;
+        max-width: 100%;
         padding-bottom: 100px
     }
 
@@ -763,7 +763,7 @@ ul.md-list--flex > .mdut--half {
     }*/
 
     [dir=ltr] .siteWrapper:not(.fullWidth) .siteContent {
-        padding-left: 40px
+        padding: 0px 40px
     }
 
     [dir=rtl] .siteWrapper:not(.fullWidth) .siteContent {

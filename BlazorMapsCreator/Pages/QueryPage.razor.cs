@@ -2,6 +2,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using BlazorMapsCreator.Models;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 

@@ -1,4 +1,5 @@
 ﻿@page "/QueryPage"
+@using BlazorMapsCreator.Models
 <h3>Query a Dataset with Web Feature Service</h3>
 
 <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
@@ -21,7 +22,7 @@
                             <strong>@col.name</strong><br />
                             @col.description<br />
                         </p>
-                        @foreach (BlazorMapsCreator.Link link in col.links)
+                        @foreach (BlazorMapsCreator.Models.Link link in col.links)
                         {
                             if (link.rel == "data")
                             {

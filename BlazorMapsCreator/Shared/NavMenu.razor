@@ -12,11 +12,17 @@
                 <BlazorFluentUI.Routing.NavLink Name="Convert" Url="convertPage" Id="convertPage" IconName="ChangeEntitlements" OnClick=@OnLinkClicked />
                 <BlazorFluentUI.Routing.NavLink Name="Dataset" Url="datasetPage" Id="datasetPage" IconName="MasterDatabase" OnClick=@OnLinkClicked />
                 <BlazorFluentUI.Routing.NavLink Name="Tileset" Url="tilesetPage" Id="tilesetPage" IconName="PictureTile" OnClick=@OnLinkClicked />
-
                 <BlazorFluentUI.Routing.NavLink Name="Query" Url="queryPage" Id="queryPage" IconName="QueryList" OnClick=@OnLinkClicked />
                 <BlazorFluentUI.Routing.NavLink Name="Feature" Url="featurePage" Id="featurePage" IconName="HistoricalWeather" OnClick=@OnLinkClicked />
-
                 <BlazorFluentUI.Routing.NavLink Name="Map" Url="MapPage" Id="mapPage" IconName="Nav2DMapView" OnClick=@OnLinkClicked />
+            </NavLinkGroup>
+            <NavLinkGroup Name="Manage" CollapseByDefault="false">
+                <BlazorFluentUI.Routing.NavLink Name="Data" Url="listDataPage" Id="listDataPage" IconName="CloudUpload" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Conversions" Url="listConversionsPage" Id="listConversionsPage" IconName="ChangeEntitlements" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Datasets" Url="listDatasetsPage" Id="listDatasetsPage" IconName="MasterDatabase" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Tilesets" Url="listTilesetsPage" Id="listTilesetsPage" IconName="PictureTile" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Statesets" Url="listStatesetsPage" Id="listStatesetsPage" IconName="HistoricalWeather" OnClick=@OnLinkClicked />
+                <BlazorFluentUI.Routing.NavLink Name="Aliasses" Url="listAliasesPage" Id="listAliassesPage" IconName="CustomList" OnClick=@OnLinkClicked />
             </NavLinkGroup>
         </Nav>
     </StackItem>

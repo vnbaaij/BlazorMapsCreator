@@ -1,0 +1,34 @@
+﻿@page "/ListDatasetsPage"
+@using BlazorMapsCreator.Models
+
+<h3>Datasets</h3>
+
+@if (datasetResponse != null && datasetResponse.datasets.Count > 0)
+{
+    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="datasetResponse.datasets"
+                 Columns="Columns"
+                 GetKey=@(item=>item.datasetId)
+                 LayoutMode="DetailsListLayoutMode.Justified"
+                 TItem="DatasetDetailInfo"
+                 OnItemInvoked="OnClick"
+                 Selection="Selection"
+                 SelectionMode="SelectionMode.Multiple">
+        </DetailsList>
+    </div>
+
+    <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="margin-top:25px; margin-bottom:25px; width:100%;">
+        <StackItem>
+            <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
+        </StackItem>
+    </Stack>
+}
+else
+{
+    <p>No 'datasets' found!</p>
+}
+<hr />
+@foreach (string message in messages)
+{
+    <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
+}

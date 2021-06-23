@@ -53,7 +53,7 @@ namespace BlazorMapsCreator.Pages
             RestRequest request = new(Method.POST);
             request.AddHeader("Content-Type", "application/json");
 
-            body = "{\"styles\":[{\"keyname\":\"occupied\",\"type\":\"boolean\",\"rules\":[{\"true\":\"#FF0000\",\"false\":\"#00FF00\"}]}]}";
+            body = "{\"styles\":[{\"keyname\":\"occupied\",\"type\":\"boolean\",\"rules\":[{\"true\":\"#FF0000\",\"false\":\"#00FF00\"}]},{\"keyname\": \"meetingType\",\"type\": \"string\",\"rules\": [{\"private\": \"#FF0000\",\"confidential\": \"#FF00AA\",\"allHands\": \"#00FF00\",\"brownBag\": \"#964B00\"}]}]}";
             request.AddParameter("", body, ParameterType.RequestBody);
 
             IRestResponse response = client.Execute(request);

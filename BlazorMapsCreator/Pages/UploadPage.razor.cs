@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using BlazorMapsCreator.Models;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +28,7 @@ namespace BlazorMapsCreator.Pages
         private string subscriptionkey;
         private string statusUrl;
         private string udid;
-        private MapDataMetadata metadata;
+        private MapDataDetailInfo metadata;
         private readonly long maxFileSize = 1024 * 1024 * 10;
         protected override void OnAfterRender(bool firstRender)
         {
@@ -123,7 +125,7 @@ namespace BlazorMapsCreator.Pages
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                metadata = JsonSerializer.Deserialize<MapDataMetadata>(response.Content);
+                metadata = JsonSerializer.Deserialize<MapDataDetailInfo>(response.Content);
             }
         }
 
