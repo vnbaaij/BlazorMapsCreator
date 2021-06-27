@@ -1,19 +1,20 @@
-﻿@page "/ListStatesetsPage"
-@using BlazorMapsCreator.Models
+﻿@page "/listStatesetsPage"
+@inherits ListPageBase<StatesetInfoObject>
+@using Azure.Maps.Creator.Models
 
 <h3>Feature statesets</h3>
 
-@if (statesetResponse != null && statesetResponse.statesets.Count > 0)
+@if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="statesetResponse.statesets"
-                 Columns="Columns"
-                 GetKey=@(item=>item.statesetId)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="StatesetInfoObject"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+        <DetailsList ItemsSource="itemList.ToList()"
+                     Columns="Columns"
+                     GetKey=@(item=>item.StatesetId)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="StatesetInfoObject"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 
@@ -21,20 +22,21 @@
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
-         <StackItem>
+        <StackItem>
             <DefaultButton @onclick="Get" Disabled="Selection.Count!=1">Get</DefaultButton>
         </StackItem>
     </Stack>
 }
 else
 {
-    <p>No 'feature statesets' found!</p>
+    <p>No items found!</p>
 }
 <hr />
+<h4>Details:</h4>
 <p>@details</p>
+
 @foreach (string message in messages)
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
 }
-
 

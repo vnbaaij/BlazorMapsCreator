@@ -1,19 +1,20 @@
 ﻿@page "/ListDataPage"
-@using BlazorMapsCreator.Models
+@inherits ListPageBase<MapDataDetailInfo>
+@using Azure.Maps.Creator.Models
 
 <h3>Uploaded data</h3>
 
-@if (mapDataResponse != null && mapDataResponse.mapDataList.Count > 0)
+@if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="mapDataResponse.mapDataList"
-                 Columns="Columns"
-                 GetKey=@(item=>item.udid)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="MapDataDetailInfo"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+        <DetailsList ItemsSource="itemList.ToList()"
+                     Columns="Columns"
+                     GetKey=@(item=>item.Udid)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="MapDataDetailInfo"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 
@@ -25,11 +26,13 @@
 }
 else
 {
-    <p>No 'uploaded data' found!</p>
+    <p>No items found!</p>
 }
 <hr />
+<h4>Details:</h4>
+<p>@details</p>
+
 @foreach (string message in messages)
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
 }
-

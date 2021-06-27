@@ -1,19 +1,20 @@
 ﻿@page "/ListAliasesPage"
-@using BlazorMapsCreator.Models
+@inherits ListPageBase<AliasListItem>
+@using Azure.Maps.Creator.Models
 
 <h3>Aliases</h3>
 
-@if (aliasListResponse != null && aliasListResponse.aliases.Count > 0)
+@if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="aliasListResponse.aliases"
-                 Columns="Columns"
-                 GetKey=@(item=>item.aliasId)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="AliasListItem"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+        <DetailsList ItemsSource="itemList.ToList()"
+                     Columns="Columns"
+                     GetKey=@(item=>item.AliasId)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="AliasListItem"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 
@@ -21,13 +22,19 @@
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
+        <StackItem>
+            <DefaultButton @onclick="Get" Disabled="Selection.Count!=1">Get</DefaultButton>
+        </StackItem>
     </Stack>
 }
 else
 {
-   <p>No 'Aliases' found!</p>
+    <p>No items found!</p>
 }
 <hr />
+<h4>Details:</h4>
+<p>@details</p>
+
 @foreach (string message in messages)
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>

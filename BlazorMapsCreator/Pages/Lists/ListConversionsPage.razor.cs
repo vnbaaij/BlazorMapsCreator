@@ -1,49 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
+using System.Net;
+using System.Text;
+
+using Azure;
+using Azure.Maps.Creator;
+using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-using BlazorMapsCreator.Models;
-
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-
-using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListConversionsPage
+    public partial class ListConversionsPage : ListPageBase<ConversionListDetailInfo>
     {
-        [Inject] IConfiguration Configuration { get; set; }
 
-        private string geography;
-        private string subscriptionkey;
-
-        private List<string> messages = new();
-        private ConversionListResponse conversionListResponse;
-
-        public List<IDetailsRowColumn<ConversionListDetailInfo>> Columns = new();
-        Selection<ConversionListDetailInfo> Selection = new();
 
         private void GetData()
         {
+            ConversionClient client = new(Credential, Geography);
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/conversions?subscription-key={subscriptionkey}&api-version=2.0")
-            {
-                Timeout = -1
-            };
-            RestRequest request = new(Method.GET);
-
-            IRestResponse response = client.Execute(request);
-
-
-            if (response.IsSuccessful)
-            {
-                conversionListResponse = JsonSerializer.Deserialize<ConversionListResponse>(response.Content);
-                conversionListResponse.conversions = new List<ConversionListDetailInfo>(conversionListResponse.conversions.OrderBy(x => x.created));
-            }
+            itemList = client.List();
 
         }
         private void OnClick(ConversionListDetailInfo item)
@@ -54,20 +33,18 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
-
-            Selection.GetKey = (item => item.conversionId);
-            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Conversion ID", x => x.conversionId) { MaxWidth = 150, IsResizable = true, Index = 0 });
-            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Created", x => x.created!) { Index = 1, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderCreated });
-            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Udid", x => x.udid) { Index = 2 });
-            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Ontology", x => x.ontology) { Index = 3 });
+            base.OnInitialized();
+            Selection.GetKey = (item => item.ConversionId);
+            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Conversion ID", x => x.ConversionId) { MaxWidth = 150, IsResizable = true, Index = 0 });
+            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Created", x => x.Created!) { Index = 1, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderCreated });
+            Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Udid", x => x.Udid) { Index = 2 });
+            //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Ontology", x => x.Ontology) { Index = 3 });
             //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Description", x => x.description) { Index = 4 });
             //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("FeatureCounts", x => x.featureCounts.) { Index = 4 });
 
             GetData();
 
-            base.OnInitialized();
+
         }
 
         private void OrderCreated(IDetailsRowColumn<ConversionListDetailInfo> column)
@@ -76,7 +53,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            conversionListResponse.conversions = new List<ConversionListDetailInfo>(column.IsSorted ? conversionListResponse.conversions.OrderBy(x => x.created) : conversionListResponse.conversions.OrderByDescending(x => x.created));
+            itemList = (Pageable<ConversionListDetailInfo>)(column.IsSorted ? itemList.OrderBy(x => x.Created) : itemList.OrderByDescending(x => x.Created));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -87,23 +64,46 @@ namespace BlazorMapsCreator.Pages.Lists
         {
             messages.Clear();
 
+            ConversionClient client = new(Credential, Geography);
+
             foreach (ConversionListDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/conversions/{item.udid}?subscription-key={subscriptionkey}&api-version=2.0")
-                {
-                    Timeout = -1
-                };
-                RestRequest request = new(Method.DELETE);
 
-                IRestResponse response = client.Execute(request);
 
-                if (response.IsSuccessful)
+                Response response = client.Delete(item.ConversionId);
+
+                if (response.Status == (int)HttpStatusCode.NoContent)
                 {
-                    messages.Add($"Data with '{item.udid}' has been deleted");
+                    messages.Add($"Data with '{item.ConversionId}' has been deleted");
                 }
-                conversionListResponse.conversions.Remove(item);
             }
+
             Selection.ClearSelection();
+            GetData();
+            StateHasChanged();
+        }
+
+        private void Get()
+        {
+            StringBuilder sb = new();
+
+            messages.Clear();
+
+            ConversionListDetailInfo item = Selection.GetSelection()[0];
+
+            sb.AppendLine($"Id: {item.ConversionId}");
+            sb.AppendLine($"Created: {item.Created}");
+            sb.AppendLine($"UdId: {item.Udid}");
+            sb.AppendLine($"Ontology: {item.Ontology ?? "-"}");
+            sb.AppendLine($"Description: {item.Description ?? "-"}");
+
+            sb.AppendLine("Feature counts:");
+            foreach (KeyValuePair<string, object> pair in (Dictionary<string, object>)item.FeatureCounts)
+            {
+                sb.AppendLine($"    {pair.Key}: {pair.Value}");
+            }
+
+            details = (MarkupString)sb.ToString().Replace(" ", "&nbsp;").Replace("\r\n", "<br />");
             StateHasChanged();
         }
     }
