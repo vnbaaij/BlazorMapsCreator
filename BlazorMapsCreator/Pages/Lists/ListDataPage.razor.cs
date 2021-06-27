@@ -7,30 +7,18 @@ using BlazorFluentUI;
 
 using BlazorMapsCreator.Models;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListDataPage
+    public partial class ListDataPage : ListPageBase<MapDataDetailInfo>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-
-        private List<string> messages = new();
         private MapDataListResponse mapDataResponse;
-
-        public List<IDetailsRowColumn<MapDataDetailInfo>> Columns = new();
-        Selection<MapDataDetailInfo> Selection = new();
 
         private void GetData()
         {
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapdata?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapdata?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -42,7 +30,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 mapDataResponse = JsonSerializer.Deserialize<MapDataListResponse>(response.Content);
-                mapDataResponse.mapDataList = new List<MapDataDetailInfo>(mapDataResponse.mapDataList.OrderBy(x => x.created));
+                itemList = new List<MapDataDetailInfo>(mapDataResponse.mapDataList);
             }
 
         }
@@ -54,8 +42,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+            base.OnInitialized();
 
             Selection.GetKey = (item => item.udid);
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Udid", x => x.udid) { MaxWidth = 150, IsResizable = true, Index = 0 });
@@ -68,8 +55,6 @@ namespace BlazorMapsCreator.Pages.Lists
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Description", x => x.description) { Index = 7 });
 
             GetData();
-
-            base.OnInitialized();
         }
 
         private void OrderCreated(IDetailsRowColumn<MapDataDetailInfo> column)
@@ -78,7 +63,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            mapDataResponse.mapDataList = new List<MapDataDetailInfo>(column.IsSorted ? mapDataResponse.mapDataList.OrderBy(x => x.created) : mapDataResponse.mapDataList.OrderByDescending(x => x.created));
+            itemList = new List<MapDataDetailInfo>(column.IsSorted ? itemList.OrderBy(x => x.created) : itemList.OrderByDescending(x => x.created));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -90,7 +75,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            mapDataResponse.mapDataList = new List<MapDataDetailInfo>(column.IsSorted ? mapDataResponse.mapDataList.OrderBy(x => x.updated) : mapDataResponse.mapDataList.OrderByDescending(x => x.updated));
+            itemList = new List<MapDataDetailInfo>(column.IsSorted ? itemList.OrderBy(x => x.updated) : itemList.OrderByDescending(x => x.updated));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -102,7 +87,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            mapDataResponse.mapDataList = new List<MapDataDetailInfo>(column.IsSorted ? mapDataResponse.mapDataList.OrderBy(x => x.sizeInBytes) : mapDataResponse.mapDataList.OrderByDescending(x => x.sizeInBytes));
+            itemList = new List<MapDataDetailInfo>(column.IsSorted ? itemList.OrderBy(x => x.sizeInBytes) : itemList.OrderByDescending(x => x.sizeInBytes));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -114,7 +99,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (MapDataDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/mapdata/{item.udid}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapdata/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -126,7 +111,7 @@ namespace BlazorMapsCreator.Pages.Lists
                 {
                     messages.Add($"Data with '{item.udid}' has been deleted");
                 }
-                mapDataResponse.mapDataList.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();

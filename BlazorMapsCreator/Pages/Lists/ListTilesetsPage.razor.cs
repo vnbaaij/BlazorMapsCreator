@@ -8,30 +8,19 @@ using BlazorFluentUI;
 using BlazorMapsCreator.Models;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListTilesetsPage
+    public partial class ListTilesetsPage : ListPageBase<TilesetDetailInfo>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-        private MarkupString details;
-
-        private List<string> messages = new();
         private TilesetListResponse tilesetResponse;
-
-        public List<IDetailsRowColumn<TilesetDetailInfo>> Columns = new();
-        Selection<TilesetDetailInfo> Selection = new();
 
         private void GetData()
         {
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/tilesets?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/tilesets?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -43,6 +32,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 tilesetResponse = JsonSerializer.Deserialize<TilesetListResponse>(response.Content);
+                itemList = new List<TilesetDetailInfo>(tilesetResponse.tilesets);
             }
 
         }
@@ -54,9 +44,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
-
+            base.OnInitialized();
             Selection.GetKey = (item => item.tilesetId);
             Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Tileset Id", x => x.tilesetId) { MaxWidth = 150, IsResizable = true, Index = 0 });
             Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Dataset Id", x => x.datasetId) { Index = 1, MaxWidth = 150, IsResizable = true });
@@ -66,10 +54,7 @@ namespace BlazorMapsCreator.Pages.Lists
             //Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Description", x => x.description) { Index = 7 });
 
             GetData();
-
-            base.OnInitialized();
         }
-
 
         private void Delete()
         {
@@ -77,7 +62,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (TilesetDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/tilesets/{item.tilesetId}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/tilesets/{item.tilesetId}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -89,7 +74,7 @@ namespace BlazorMapsCreator.Pages.Lists
                 {
                     messages.Add($"Data with '{item.tilesetId}' has been deleted");
                 }
-                tilesetResponse.tilesets.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();
@@ -101,7 +86,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             TilesetDetailInfo item = Selection.GetSelection()[0];
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/tilesets/{item.tilesetId}?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/tilesets/{item.tilesetId}?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };

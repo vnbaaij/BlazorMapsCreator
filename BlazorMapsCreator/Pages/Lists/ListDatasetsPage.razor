@@ -1,19 +1,20 @@
 ﻿@page "/ListDatasetsPage"
+@inherits ListPageBase<DatasetDetailInfo>
 @using BlazorMapsCreator.Models
 
 <h3>Datasets</h3>
 
-@if (datasetResponse != null && datasetResponse.datasets.Count > 0)
+@if (itemList != null)
 {
-    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="datasetResponse.datasets"
-                 Columns="Columns"
-                 GetKey=@(item=>item.datasetId)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="DatasetDetailInfo"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+    <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="itemList"
+                     Columns="Columns"
+                     GetKey=@(item=>item.datasetId)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="DatasetDetailInfo"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 

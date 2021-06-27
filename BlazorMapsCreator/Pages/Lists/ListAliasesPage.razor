@@ -1,12 +1,13 @@
 ﻿@page "/ListAliasesPage"
+@inherits ListPageBase<AliasListItem>
 @using BlazorMapsCreator.Models
 
 <h3>Aliases</h3>
 
-@if (aliasListResponse != null && aliasListResponse.aliases.Count > 0)
+@if (itemList != null)
 {
-    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="aliasListResponse.aliases"
+    <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="itemList"
                  Columns="Columns"
                  GetKey=@(item=>item.aliasId)
                  LayoutMode="DetailsListLayoutMode.Justified"
@@ -25,7 +26,7 @@
 }
 else
 {
-   <p>No 'Aliases' found!</p>
+    <p>No items found!</p>
 }
 <hr />
 @foreach (string message in messages)

@@ -8,30 +8,19 @@ using BlazorFluentUI;
 using BlazorMapsCreator.Models;
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListStatesetsPage
+    public partial class ListStatesetsPage : ListPageBase<StatesetInfoObject>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-        private MarkupString details;
-
-        private List<string> messages = new();
         private StatesetListResponse statesetResponse;
-
-        public List<IDetailsRowColumn<StatesetInfoObject>> Columns = new();
-        Selection<StatesetInfoObject> Selection = new();
 
         private void GetData()
         {
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/featureStateSets?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/featureStateSets?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -43,7 +32,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 statesetResponse = JsonSerializer.Deserialize<StatesetListResponse>(response.Content);
-                //statesetResponse.statesets = new List<StatesetInfoObject>(statesetResponse.statesets.OrderBy(x => x.created));
+                itemList = new List<StatesetInfoObject>(statesetResponse.statesets);
             }
 
         }
@@ -55,8 +44,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+            base.OnInitialized();
 
             Selection.GetKey = (item => item.statesetId);
             Columns.Add(new DetailsRowColumn<StatesetInfoObject>("Stateset Id", x => x.statesetId) { MaxWidth = 150, IsResizable = true, Index = 0 });
@@ -69,11 +57,7 @@ namespace BlazorMapsCreator.Pages.Lists
             //Columns.Add(new DetailsRowColumn<StatesetInfoObject>("Description", x => x.description) { Index = 7 });
 
             GetData();
-
-            base.OnInitialized();
         }
-
-
 
         private void Delete()
         {
@@ -81,7 +65,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (StatesetInfoObject item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/featureStateSets/{item.statesetId}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/featureStateSets/{item.statesetId}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -93,7 +77,7 @@ namespace BlazorMapsCreator.Pages.Lists
                 {
                     messages.Add($"Data with '{item.statesetId}' has been deleted");
                 }
-                statesetResponse.statesets.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();
@@ -105,7 +89,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             StatesetInfoObject item = Selection.GetSelection()[0];
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/featureStateSets/{item.statesetId}?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/featureStateSets/{item.statesetId}?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };

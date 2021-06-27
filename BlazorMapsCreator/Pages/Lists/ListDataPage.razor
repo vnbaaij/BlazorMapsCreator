@@ -1,19 +1,20 @@
 ﻿@page "/ListDataPage"
+@inherits ListPageBase<MapDataDetailInfo>
 @using BlazorMapsCreator.Models
 
 <h3>Uploaded data</h3>
 
-@if (mapDataResponse != null && mapDataResponse.mapDataList.Count > 0)
+@if (itemList != null)
 {
-    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="mapDataResponse.mapDataList"
-                 Columns="Columns"
-                 GetKey=@(item=>item.udid)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="MapDataDetailInfo"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+    <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="itemList"
+                     Columns="Columns"
+                     GetKey=@(item=>item.udid)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="MapDataDetailInfo"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 

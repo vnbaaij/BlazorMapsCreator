@@ -1,19 +1,20 @@
 ﻿@page "/ListStatesetsPage"
+@inherits ListPageBase<StatesetInfoObject>
 @using BlazorMapsCreator.Models
 
 <h3>Feature statesets</h3>
 
-@if (statesetResponse != null && statesetResponse.statesets.Count > 0)
+@if (itemList != null)
 {
-    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="statesetResponse.statesets"
-                 Columns="Columns"
-                 GetKey=@(item=>item.statesetId)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="StatesetInfoObject"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+    <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="itemList"
+                     Columns="Columns"
+                     GetKey=@(item=>item.statesetId)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="StatesetInfoObject"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 
@@ -21,7 +22,7 @@
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
-         <StackItem>
+        <StackItem>
             <DefaultButton @onclick="Get" Disabled="Selection.Count!=1">Get</DefaultButton>
         </StackItem>
     </Stack>

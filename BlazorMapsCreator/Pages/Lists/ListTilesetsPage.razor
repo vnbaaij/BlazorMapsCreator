@@ -1,10 +1,11 @@
 ﻿@page "/ListTilesetsPage"
+@inherits ListPageBase<TilesetDetailInfo>
 @using BlazorMapsCreator.Models
 
 <h3>Tilesets</h3>
 
-<div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-    <DetailsList ItemsSource="tilesetResponse.tilesets"
+<div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+    <DetailsList ItemsSource="itemList"
                  Columns="Columns"
                  GetKey=@(item=>item.tilesetId)
                  LayoutMode="DetailsListLayoutMode.Justified"

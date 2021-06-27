@@ -7,30 +7,18 @@ using BlazorFluentUI;
 
 using BlazorMapsCreator.Models;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListConversionsPage
+    public partial class ListConversionsPage : ListPageBase<ConversionListDetailInfo>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-
-        private List<string> messages = new();
         private ConversionListResponse conversionListResponse;
-
-        public List<IDetailsRowColumn<ConversionListDetailInfo>> Columns = new();
-        Selection<ConversionListDetailInfo> Selection = new();
 
         private void GetData()
         {
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/conversions?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/conversions?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -42,7 +30,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 conversionListResponse = JsonSerializer.Deserialize<ConversionListResponse>(response.Content);
-                conversionListResponse.conversions = new List<ConversionListDetailInfo>(conversionListResponse.conversions.OrderBy(x => x.created));
+                itemList = new List<ConversionListDetailInfo>(conversionListResponse.conversions.OrderBy(x => x.created));
             }
 
         }
@@ -54,9 +42,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
-
+            base.OnInitialized();
             Selection.GetKey = (item => item.conversionId);
             Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Conversion ID", x => x.conversionId) { MaxWidth = 150, IsResizable = true, Index = 0 });
             Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Created", x => x.created!) { Index = 1, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderCreated });
@@ -66,8 +52,6 @@ namespace BlazorMapsCreator.Pages.Lists
             //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("FeatureCounts", x => x.featureCounts.) { Index = 4 });
 
             GetData();
-
-            base.OnInitialized();
         }
 
         private void OrderCreated(IDetailsRowColumn<ConversionListDetailInfo> column)
@@ -76,7 +60,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            conversionListResponse.conversions = new List<ConversionListDetailInfo>(column.IsSorted ? conversionListResponse.conversions.OrderBy(x => x.created) : conversionListResponse.conversions.OrderByDescending(x => x.created));
+            itemList = new List<ConversionListDetailInfo>(column.IsSorted ? itemList.OrderBy(x => x.created) : itemList.OrderByDescending(x => x.created));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -89,7 +73,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (ConversionListDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/conversions/{item.udid}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/conversions/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -101,7 +85,7 @@ namespace BlazorMapsCreator.Pages.Lists
                 {
                     messages.Add($"Data with '{item.udid}' has been deleted");
                 }
-                conversionListResponse.conversions.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();

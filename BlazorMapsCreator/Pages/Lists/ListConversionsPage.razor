@@ -1,19 +1,20 @@
 ﻿@page "/ListConversionsPage"
+@inherits ListPageBase<ConversionListDetailInfo>
 @using BlazorMapsCreator.Models
 
 <h3>Conversions</h3>
 
-@if (conversionListResponse != null && conversionListResponse.conversions.Count > 0)
+@if (itemList != null)
 {
-    <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="conversionListResponse.conversions"
-                 Columns="Columns"
-                 GetKey=@(item=>item.conversionId)
-                 LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="ConversionListDetailInfo"
-                 OnItemInvoked="OnClick"
-                 Selection="Selection"
-                 SelectionMode="SelectionMode.Multiple">
+    <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
+        <DetailsList ItemsSource="itemList"
+                     Columns="Columns"
+                     GetKey=@(item=>item.conversionId)
+                     LayoutMode="DetailsListLayoutMode.Justified"
+                     TItem="ConversionListDetailInfo"
+                     OnItemInvoked="OnClick"
+                     Selection="Selection"
+                     SelectionMode="SelectionMode.Multiple">
         </DetailsList>
     </div>
 
@@ -25,7 +26,7 @@
 }
 else
 {
-   <p>No 'Conversions' found!</p>
+    <p>No 'Conversions' found!</p>
 }
 <hr />
 @foreach (string message in messages)

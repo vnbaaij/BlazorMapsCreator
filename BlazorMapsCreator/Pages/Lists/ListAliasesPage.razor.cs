@@ -7,30 +7,18 @@ using BlazorFluentUI;
 
 using BlazorMapsCreator.Models;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListAliasesPage
+    public partial class ListAliasesPage : ListPageBase<AliasListItem>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-
-        private List<string> messages = new();
         private AliasListResponse aliasListResponse;
-
-        public List<IDetailsRowColumn<AliasListItem>> Columns = new();
-        Selection<AliasListItem> Selection = new();
 
         private void GetData()
         {
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/aliasses?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/aliasses?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -42,7 +30,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 aliasListResponse = JsonSerializer.Deserialize<AliasListResponse>(response.Content);
-                aliasListResponse.aliases = new List<AliasListItem>(aliasListResponse.aliases.OrderBy(x => x.createdTimestamp));
+                itemList = new List<AliasListItem>(itemList.OrderBy(x => x.createdTimestamp));
             }
 
         }
@@ -54,8 +42,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+            base.OnInitialized();
 
             Selection.GetKey = (item => item.aliasId);
             Columns.Add(new DetailsRowColumn<AliasListItem>("Udid", x => x.aliasId) { MaxWidth = 150, IsResizable = true, Index = 0 });
@@ -63,10 +50,7 @@ namespace BlazorMapsCreator.Pages.Lists
             Columns.Add(new DetailsRowColumn<AliasListItem>("Updated", x => x.lastUpdatedTimestamp!) { Index = 2, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderUpdated });
             //Columns.Add(new DetailsRowColumn<AliasMetadata>("Dataitem", x => x.creatorDataItemId ) { Index = 3, MaxWidth = 100, IsResizable = true });
 
-
             GetData();
-
-            base.OnInitialized();
         }
 
         private void OrderCreated(IDetailsRowColumn<AliasListItem> column)
@@ -75,7 +59,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            aliasListResponse.aliases = new List<AliasListItem>(column.IsSorted ? aliasListResponse.aliases.OrderBy(x => x.createdTimestamp) : aliasListResponse.aliases.OrderByDescending(x => x.createdTimestamp));
+            itemList = new List<AliasListItem>(column.IsSorted ? itemList.OrderBy(x => x.createdTimestamp) : itemList.OrderByDescending(x => x.createdTimestamp));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -87,7 +71,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            aliasListResponse.aliases = new List<AliasListItem>(column.IsSorted ? aliasListResponse.aliases.OrderBy(x => x.lastUpdatedTimestamp) : aliasListResponse.aliases.OrderByDescending(x => x.lastUpdatedTimestamp));
+            itemList = new List<AliasListItem>(column.IsSorted ? itemList.OrderBy(x => x.lastUpdatedTimestamp) : itemList.OrderByDescending(x => x.lastUpdatedTimestamp));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -101,7 +85,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (AliasListItem item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/aliases/{item.aliasId}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/aliases/{item.aliasId}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -111,9 +95,9 @@ namespace BlazorMapsCreator.Pages.Lists
 
                 if (response.IsSuccessful)
                 {
-                    messages.Add($"Data with '{item.aliasId}' has been deleted");
+                    messages.Add($"Item with id '{item.aliasId}' has been deleted");
                 }
-                aliasListResponse.aliases.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();

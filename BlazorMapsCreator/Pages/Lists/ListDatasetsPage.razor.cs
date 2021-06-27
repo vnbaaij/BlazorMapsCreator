@@ -7,30 +7,17 @@ using BlazorFluentUI;
 
 using BlazorMapsCreator.Models;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
-
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages.Lists
 {
-    public partial class ListDatasetsPage
+    public partial class ListDatasetsPage : ListPageBase<DatasetDetailInfo>
     {
-        [Inject] IConfiguration Configuration { get; set; }
-
-        private string geography;
-        private string subscriptionkey;
-
-        private List<string> messages = new();
         private DatasetListResponse datasetResponse;
-
-        public List<IDetailsRowColumn<DatasetDetailInfo>> Columns = new();
-        Selection<DatasetDetailInfo> Selection = new();
 
         private void GetData()
         {
-
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/datasets?subscription-key={subscriptionkey}&api-version=2.0")
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/datasets?subscription-key={SubscriptionKey}&api-version=2.0")
             {
                 Timeout = -1
             };
@@ -42,7 +29,7 @@ namespace BlazorMapsCreator.Pages.Lists
             if (response.IsSuccessful)
             {
                 datasetResponse = JsonSerializer.Deserialize<DatasetListResponse>(response.Content);
-                datasetResponse.datasets = new List<DatasetDetailInfo>(datasetResponse.datasets.OrderBy(x => x.created));
+                itemList = new List<DatasetDetailInfo>(datasetResponse.datasets.OrderBy(x => x.created));
             }
 
         }
@@ -54,8 +41,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
         protected override void OnInitialized()
         {
-            geography = Configuration["AzureMaps:Geography"];
-            subscriptionkey = Configuration["AzureMaps:SubscriptionKey"];
+            base.OnInitialized();
 
             Selection.GetKey = (item => item.datasetId);
             Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("DatasetUdid", x => x.datasetId) { MaxWidth = 150, IsResizable = true, Index = 0 });
@@ -67,10 +53,7 @@ namespace BlazorMapsCreator.Pages.Lists
             //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Format", x => x.dataFormat!) { Index = 5, MaxWidth = 100, IsResizable = true });
             //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Location", x => x.location!) { Index = 6, MaxWidth = 450, IsResizable = true });
 
-
             GetData();
-
-            base.OnInitialized();
         }
 
         private void OrderCreated(IDetailsRowColumn<DatasetDetailInfo> column)
@@ -79,7 +62,7 @@ namespace BlazorMapsCreator.Pages.Lists
             var selected = Selection.GetSelection();
 
             //create new sorted list
-            datasetResponse.datasets = new List<DatasetDetailInfo>(column.IsSorted ? datasetResponse.datasets.OrderBy(x => x.created) : datasetResponse.datasets.OrderByDescending(x => x.created));
+            itemList = new List<DatasetDetailInfo>(column.IsSorted ? itemList.OrderBy(x => x.created) : itemList.OrderByDescending(x => x.created));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
@@ -91,7 +74,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (DatasetDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{geography}.atlas.microsoft.com/datasets/{item.datasetId}?subscription-key={subscriptionkey}&api-version=2.0")
+                RestClient client = new($"https://{Geography}.atlas.microsoft.com/datasets/{item.datasetId}?subscription-key={SubscriptionKey}&api-version=2.0")
                 {
                     Timeout = -1
                 };
@@ -103,7 +86,7 @@ namespace BlazorMapsCreator.Pages.Lists
                 {
                     messages.Add($"Data with '{item.datasetId}' has been deleted");
                 }
-                datasetResponse.datasets.Remove(item);
+                itemList.Remove(item);
             }
             Selection.ClearSelection();
             StateHasChanged();
