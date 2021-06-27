@@ -26,14 +26,13 @@ namespace BlazorMapsCreator.Pages.Lists
 
             IRestResponse response = client.Execute(request);
 
-
             if (response.IsSuccessful)
             {
                 mapDataResponse = JsonSerializer.Deserialize<MapDataListResponse>(response.Content);
                 itemList = new List<MapDataDetailInfo>(mapDataResponse.mapDataList);
             }
-
         }
+
         private void OnClick(MapDataDetailInfo item)
         {
             Console.WriteLine("Clicked!");

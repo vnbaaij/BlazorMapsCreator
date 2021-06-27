@@ -11,7 +11,6 @@ namespace BlazorMapsCreator.Pages.Lists
     {
         [Inject] protected IConfiguration Configuration { get; set; }
 
-
         protected MarkupString details;
 
         protected List<string> messages = new();
