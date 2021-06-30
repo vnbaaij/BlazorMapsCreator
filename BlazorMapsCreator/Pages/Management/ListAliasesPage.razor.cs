@@ -8,7 +8,7 @@ using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public partial class ListAliasesPage : ListPageBase<AliasListItem>
     {
@@ -18,11 +18,10 @@ namespace BlazorMapsCreator.Pages.Lists
 
             itemList = client.List();
         }
-        private void OnClick(AliasListItem item)
+        private static void OnClick(AliasListItem item)
         {
             Console.WriteLine("Clicked!");
         }
-
 
         protected override void OnInitialized()
         {
@@ -60,8 +59,6 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (AliasListItem item in Selection.GetSelection())
             {
-
-
                 Response response = client.Delete(item.AliasId);
 
                 if (response.Status == (int)HttpStatusCode.NoContent)
@@ -73,10 +70,6 @@ namespace BlazorMapsCreator.Pages.Lists
             Selection.ClearSelection();
             GetData();
             StateHasChanged();
-        }
-        private void Get()
-        {
-
         }
     }
 }

@@ -12,24 +12,20 @@ using BlazorFluentUI;
 
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public partial class ListConversionsPage : ListPageBase<ConversionListDetailInfo>
     {
-
-
         private void GetData()
         {
             ConversionClient client = new(Credential, Geography);
 
             itemList = client.List();
-
         }
-        private void OnClick(ConversionListDetailInfo item)
+        private static void OnClick(ConversionListDetailInfo item)
         {
             Console.WriteLine("Clicked!");
         }
-
 
         protected override void OnInitialized()
         {
@@ -38,27 +34,18 @@ namespace BlazorMapsCreator.Pages.Lists
             Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Conversion ID", x => x.ConversionId) { MaxWidth = 150, IsResizable = true, Index = 0 });
             Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Created", x => x.Created!) { Index = 1, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderCreated });
             Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Udid", x => x.Udid) { Index = 2 });
-            //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Ontology", x => x.Ontology) { Index = 3 });
-            //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("Description", x => x.description) { Index = 4 });
-            //Columns.Add(new DetailsRowColumn<ConversionListDetailInfo>("FeatureCounts", x => x.featureCounts.) { Index = 4 });
 
             GetData();
-
-
         }
 
         private void OrderCreated(IDetailsRowColumn<ConversionListDetailInfo> column)
         {
-            // since we're creating a new list, we need to make a copy of what was previously selected
-            var selected = Selection.GetSelection();
-
             //create new sorted list
             itemList = (Pageable<ConversionListDetailInfo>)(column.IsSorted ? itemList.OrderBy(x => x.Created) : itemList.OrderByDescending(x => x.Created));
 
             column.IsSorted = !column.IsSorted;
             StateHasChanged();
         }
-
 
         private void Delete()
         {
@@ -68,8 +55,6 @@ namespace BlazorMapsCreator.Pages.Lists
 
             foreach (ConversionListDetailInfo item in Selection.GetSelection())
             {
-
-
                 Response response = client.Delete(item.ConversionId);
 
                 if (response.Status == (int)HttpStatusCode.NoContent)

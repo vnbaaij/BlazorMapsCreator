@@ -10,22 +10,20 @@ using BlazorFluentUI;
 
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public partial class ListTilesetsPage : ListPageBase<TilesetDetailInfo>
     {
-
         private void GetData()
         {
             TilesetClient client = new(Credential, Geography);
 
             itemList = client.List();
         }
-        private void OnClick(TilesetDetailInfo item)
+        private static void OnClick(TilesetDetailInfo item)
         {
             Console.WriteLine("Clicked!");
         }
-
 
         protected override void OnInitialized()
         {
@@ -33,17 +31,9 @@ namespace BlazorMapsCreator.Pages.Lists
             Selection.GetKey = (item => item.TilesetId);
             Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Tileset Id", x => x.TilesetId) { MaxWidth = 150, IsResizable = true, Index = 0 });
             Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Dataset Id", x => x.DatasetId) { Index = 1, MaxWidth = 150, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Min zoom", x => x.minZoom!) { Index = 2, MaxWidth = 150, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Max zoom", x => x.maxZoom!) { Index = 3, MaxWidth = 100, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Ontology", x => x.ontology) { Index = 4, MaxWidth = 100, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<TilesetDetailInfo>("Description", x => x.description) { Index = 7 });
 
             GetData();
-
-
         }
-
-
         private void Delete()
         {
             messages.Clear();
@@ -70,7 +60,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             TilesetDetailInfo item = Selection.GetSelection()[0];
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine($"Dataset: {item.DatasetId}");
 
             sb.AppendLine("Bounding box:");

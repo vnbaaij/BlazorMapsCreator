@@ -8,7 +8,7 @@ using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public partial class ListDatasetsPage : ListPageBase<DatasetDetailInfo>
     {
@@ -18,7 +18,7 @@ namespace BlazorMapsCreator.Pages.Lists
 
             itemList = client.List();
         }
-        private void OnClick(DatasetDetailInfo item)
+        private static void OnClick(DatasetDetailInfo item)
         {
             Console.WriteLine("Clicked!");
         }
@@ -29,24 +29,12 @@ namespace BlazorMapsCreator.Pages.Lists
             Selection.GetKey = (item => item.DatasetId);
             Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("DatasetUdid", x => x.DatasetId) { MaxWidth = 150, IsResizable = true, Index = 0 });
             Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Created", x => x.Created!) { Index = 1, MaxWidth = 150, IsResizable = true, OnColumnClick = OrderCreated });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Ontology", x => x.Ontology!) { Index = 2 });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Description", x => x.Description) { Index = 3 });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Status", x => x.uploadStatus!) { Index = 3, MaxWidth = 100, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Size (kB)", x => x.sizeInBytes!) { Index = 4, MaxWidth = 100, IsResizable = true, OnColumnClick = OrderSize });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Format", x => x.dataFormat!) { Index = 5, MaxWidth = 100, IsResizable = true });
-            //Columns.Add(new DetailsRowColumn<DatasetDetailInfo>("Location", x => x.location!) { Index = 6, MaxWidth = 450, IsResizable = true });
-
 
             GetData();
-
-
         }
 
         private void OrderCreated(IDetailsRowColumn<DatasetDetailInfo> column)
         {
-            // since we're creating a new list, we need to make a copy of what was previously selected
-            var selected = Selection.GetSelection();
-
             //create new sorted list
             itemList = (Pageable<DatasetDetailInfo>)(column.IsSorted ? itemList.OrderBy(x => x.Created) : itemList.OrderByDescending(x => x.Created));
 

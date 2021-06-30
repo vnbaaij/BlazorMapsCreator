@@ -1,28 +1,29 @@
 using System;
+using System.Collections.Generic;
 
 using Azure.Maps.Creator;
 using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public partial class ListDataPage : ListPageBase<MapDataDetailInfo>
     {
-
+        private IList<MapDataDetailInfo> dataList;
         private void GetData()
         {
             DataClient client = new(Credential, Geography);
 
             MapDataListResponse response = client.ListPreview();
-            itemList = (Azure.Pageable<MapDataDetailInfo>)response.MapDataList;
+
+            dataList = (IList<MapDataDetailInfo>)response.MapDataList;
         }
 
-        private void OnClick(MapDataDetailInfo item)
+        private static void OnClick(MapDataDetailInfo item)
         {
             Console.WriteLine("Clicked!");
         }
-
 
         protected override void OnInitialized()
         {
@@ -33,7 +34,7 @@ namespace BlazorMapsCreator.Pages.Lists
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Size (kB)", x => x.SizeInBytes!) { Index = 4, MaxWidth = 100, IsResizable = true });
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Format", x => x.DataFormat!) { Index = 5, MaxWidth = 100, IsResizable = true });
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Location", x => x.Location!) { Index = 6, MaxWidth = 450, IsResizable = true });
-            Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Description", x => x.Description) { Index = 7 });
+            //Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Description", x => x.Description) { Index = 7 });
 
             GetData();
         }

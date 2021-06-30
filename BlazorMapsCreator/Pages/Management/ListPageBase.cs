@@ -8,7 +8,7 @@ using BlazorFluentUI;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages.Management
 {
     public class ListPageBase<TItem> : ComponentBase
     {
