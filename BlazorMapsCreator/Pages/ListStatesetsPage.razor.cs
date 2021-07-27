@@ -10,9 +10,9 @@ using BlazorFluentUI;
 
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListStatesetsPage : ListPageBase<StatesetInfoObject>
+    public partial class ListStatesetsPage : PageBase<StatesetInfoObject>
     {
         private void GetData()
         {

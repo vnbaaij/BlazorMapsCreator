@@ -6,9 +6,9 @@ using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDataPage : ListPageBase<MapDataDetailInfo>
+    public partial class ListDataPage : PageBase<MapDataDetailInfo>
     {
         private IList<MapDataDetailInfo> dataList;
         private void GetData()

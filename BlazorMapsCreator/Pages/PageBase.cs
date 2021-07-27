@@ -8,9 +8,9 @@ using BlazorFluentUI;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public class ListPageBase<TItem> : ComponentBase
+    public class PageBase<TItem> : ComponentBase
     {
         [Inject] protected IConfiguration Configuration { get; set; }
 

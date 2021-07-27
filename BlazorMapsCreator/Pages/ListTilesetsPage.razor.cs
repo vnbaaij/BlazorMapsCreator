@@ -10,9 +10,9 @@ using BlazorFluentUI;
 
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListTilesetsPage : ListPageBase<TilesetDetailInfo>
+    public partial class ListTilesetsPage : PageBase<TilesetDetailInfo>
     {
         private void GetData()
         {

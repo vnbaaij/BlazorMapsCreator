@@ -12,9 +12,9 @@ using BlazorFluentUI;
 
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListConversionsPage : ListPageBase<ConversionListDetailInfo>
+    public partial class ListConversionsPage : PageBase<ConversionListDetailInfo>
     {
         private void GetData()
         {

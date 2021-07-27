@@ -8,9 +8,9 @@ using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListAliasesPage : ListPageBase<AliasListItem>
+    public partial class ListAliasesPage : PageBase<AliasListItem>
     {
         private void GetData()
         {

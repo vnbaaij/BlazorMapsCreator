@@ -1,17 +1,17 @@
-﻿@page "/ListDataPage"
-@inherits ListPageBase<MapDataDetailInfo>
+﻿@page "/ListDatasetsPage"
+@inherits PageBase<DatasetDetailInfo>
 @using Azure.Maps.Creator.Models
 
-<h3>Uploaded data</h3>
+<h3>Datasets</h3>
 
-@if (dataList != null)
+@if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="dataList"
+        <DetailsList ItemsSource="itemList.ToList()"
                      Columns="Columns"
-                     GetKey=@(item=>item.Udid)
+                     GetKey=@(item=>item.DatasetId)
                      LayoutMode="DetailsListLayoutMode.Justified"
-                     TItem="MapDataDetailInfo"
+                     TItem="DatasetDetailInfo"
                      OnItemInvoked="OnClick"
                      Selection="Selection"
                      SelectionMode="SelectionMode.Multiple">

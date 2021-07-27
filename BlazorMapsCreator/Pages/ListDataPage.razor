@@ -1,17 +1,17 @@
-﻿@page "/listStatesetsPage"
-@inherits ListPageBase<StatesetInfoObject>
+﻿@page "/ListDataPage"
+@inherits PageBase<MapDataDetailInfo>
 @using Azure.Maps.Creator.Models
 
-<h3>Feature statesets</h3>
+<h3>Uploaded data</h3>
 
-@if (itemList != null)
+@if (dataList != null)
 {
     <div data-is-scrollable="true" style="height:400px;overflow-y:auto; width:100%">
-        <DetailsList ItemsSource="itemList.ToList()"
+        <DetailsList ItemsSource="dataList"
                      Columns="Columns"
-                     GetKey=@(item=>item.StatesetId)
+                     GetKey=@(item=>item.Udid)
                      LayoutMode="DetailsListLayoutMode.Justified"
-                     TItem="StatesetInfoObject"
+                     TItem="MapDataDetailInfo"
                      OnItemInvoked="OnClick"
                      Selection="Selection"
                      SelectionMode="SelectionMode.Multiple">
@@ -21,9 +21,6 @@
     <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="margin-top:25px; margin-bottom:25px; width:100%;">
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
-        </StackItem>
-        <StackItem>
-            <DefaultButton @onclick="Get" Disabled="Selection.Count!=1">Get</DefaultButton>
         </StackItem>
     </Stack>
 }
@@ -39,4 +36,3 @@ else
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
 }
-

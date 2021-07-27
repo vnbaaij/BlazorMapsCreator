@@ -8,9 +8,9 @@ using Azure.Maps.Creator.Models;
 
 using BlazorFluentUI;
 
-namespace BlazorMapsCreator.Pages.Management
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDatasetsPage : ListPageBase<DatasetDetailInfo>
+    public partial class ListDatasetsPage : PageBase<DatasetDetailInfo>
     {
         private void GetData()
         {
