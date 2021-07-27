@@ -1,5 +1,5 @@
 ﻿@page "/QueryPage"
-@using BlazorMapsCreator.Models
+@using Azure.Maps.Creator.Models
 <h3>Query a Dataset with Web Feature Service</h3>
 
 <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
@@ -15,18 +15,18 @@
             @if (allCollections != null)
             {
 
-                @foreach (Collection col in allCollections.collections)
+                @foreach (CollectionInfo col in allCollections.Collections)
                 {
                     <li>
                         <p>
-                            <strong>@col.name</strong><br />
-                            @col.description<br />
+                            <strong>@col.Name</strong><br />
+                            @col.Description<br />
                         </p>
-                        @foreach (BlazorMapsCreator.Models.Link link in col.links)
+                        @foreach (Azure.Maps.Creator.Models.WfsEndpointLink link in col.Links)
                         {
-                            if (link.rel == "data")
+                            if (link.Rel == "data")
                             {
-                                <DefaultButton OnClick="(()=>QueryCollectionAsync(col.name, link.href))">Query this collection</DefaultButton>
+                                <DefaultButton OnClick="(()=>QueryCollectionAsync(col.Name, link.Href))">Query this collection</DefaultButton>
                             }
                         }
                         <br /><br />
@@ -40,11 +40,11 @@
         <ul style="width:300px;">
             @if (featureCollection != null)
             {
-                @foreach (Feature f in featureCollection.features)
+                @foreach (GeoJsonFeature f in featureCollection.Features)
                 {
                     <li>
-                        Id: @f.id<br />
-                        Name: @(f.properties.name ?? "-")
+                        Id: @f.Id<br />
+                        Name: @(f.Properties.ToString() ?? "-")
                     </li>
                 }
             }

@@ -2,7 +2,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using BlazorMapsCreator.Models;
+using Azure.Maps.Creator.Models;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +22,8 @@ namespace BlazorMapsCreator.Pages
 
         private string datasetUdid;
 
-        private Collections allCollections;
-        private FeatureCollection featureCollection;
+        private CollectionsResponse allCollections;
+        private GeoJsonFeatureCollection featureCollection;
 
         private string errorMessage;
 
@@ -54,12 +54,12 @@ namespace BlazorMapsCreator.Pages
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                allCollections = JsonSerializer.Deserialize<Collections>(response.Content);
+                allCollections = JsonSerializer.Deserialize<CollectionsResponse>(response.Content);
             }
             else
             {
-                ODataErrorResponse error = JsonSerializer.Deserialize<ODataErrorResponse>(response.Content);
-                errorMessage = error.error.message;
+                ErrorDetail error = JsonSerializer.Deserialize<ErrorDetail>(response.Content);
+                errorMessage = error.Message;
             }
         }
 
@@ -79,14 +79,14 @@ namespace BlazorMapsCreator.Pages
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                featureCollection = JsonSerializer.Deserialize<FeatureCollection>(response.Content);
+                featureCollection = JsonSerializer.Deserialize<GeoJsonFeatureCollection>(response.Content);
                 if (collection == "unit")
-                    await LocalStorage.SetItemAsync("units", featureCollection.features.Select(f => f.id).ToArray());
+                    await LocalStorage.SetItemAsync("units", featureCollection.Features.Select(f => f.Id).ToArray());
             }
             else
             {
-                ODataErrorResponse error = JsonSerializer.Deserialize<ODataErrorResponse>(response.Content);
-                errorMessage = error.error.message;
+                ErrorDetail error = JsonSerializer.Deserialize<ErrorDetail>(response.Content);
+                errorMessage = error.Message;
             }
 
         }
