@@ -54,7 +54,7 @@ namespace BlazorMapsCreator.Pages
             IRestResponse response = client.Execute(request);
             if (response.IsSuccessful)
             {
-                allCollections = JsonSerializer.Deserialize<CollectionsResponse>(response.Content);
+                allCollections = JsonSerializer.Deserialize<Collections>(response.Content);
             }
             else
             {
