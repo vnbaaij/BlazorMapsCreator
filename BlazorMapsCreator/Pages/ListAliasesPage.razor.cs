@@ -11,7 +11,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListAliasesPage : BasePage<AliasListItem>
+    public partial class ListAliasesPage : PageBase<AliasListItem>
     {
         private AliasListResponse aliasListResponse;
 
