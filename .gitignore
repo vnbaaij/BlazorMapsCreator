@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /BlazorMapsCreator/Development/unsafe_uploads
 /BlazorMapsCreator/appsettings.Development.json
+/BlazorMapsCreator/wwwroot/Data
