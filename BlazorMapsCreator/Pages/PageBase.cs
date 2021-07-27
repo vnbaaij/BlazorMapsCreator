@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace BlazorMapsCreator.Pages
 {
-    public class BasePage<TItem> : ComponentBase, IDisposable
+    public class PageBase<TItem> : ComponentBase, IDisposable
     {
         [Inject] protected IConfiguration Configuration { get; set; }
 

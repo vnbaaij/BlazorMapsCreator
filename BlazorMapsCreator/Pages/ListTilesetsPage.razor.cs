@@ -13,7 +13,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListTilesetsPage : BasePage<TilesetDetailInfo>
+    public partial class ListTilesetsPage : PageBase<TilesetDetailInfo>
     {
         private TilesetListResponse tilesetResponse;
 

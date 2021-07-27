@@ -11,7 +11,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListConversionsPage : BasePage<ConversionListDetailInfo>
+    public partial class ListConversionsPage : PageBase<ConversionListDetailInfo>
     {
         private ConversionListResponse conversionListResponse;
 

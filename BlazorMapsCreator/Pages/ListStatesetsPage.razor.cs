@@ -13,7 +13,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListStatesetsPage : BasePage<StatesetInfoObject>
+    public partial class ListStatesetsPage : PageBase<StatesetInfoObject>
     {
         private StatesetListResponse statesetResponse;
 

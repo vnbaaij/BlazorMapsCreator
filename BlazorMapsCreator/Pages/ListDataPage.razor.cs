@@ -17,7 +17,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDataPage : BasePage<MapDataDetailInfo>
+    public partial class ListDataPage : PageBase<MapDataDetailInfo>
     {
         [Inject] IWebHostEnvironment Environment { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }

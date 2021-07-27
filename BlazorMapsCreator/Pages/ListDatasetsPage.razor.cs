@@ -11,7 +11,7 @@ using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDatasetsPage : BasePage<DatasetDetailInfo>
+    public partial class ListDatasetsPage : PageBase<DatasetDetailInfo>
     {
         private DatasetListResponse datasetResponse;
 
