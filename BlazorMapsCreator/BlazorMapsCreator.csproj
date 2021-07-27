@@ -18,10 +18,10 @@
 
   <ItemGroup>
     <Reference Include="Azure.Maps.Creator">
-      <HintPath>..\..\..\azure-sdk-net-vnb\maps\Azure.Maps.Creator\src\bin\Debug\netstandard2.0\Azure.Maps.Creator.dll</HintPath>
+      <HintPath>..\..\..\azure-sdk-for-net-vnb\maps\Azure.Maps.Creator\src\bin\Debug\netstandard2.0\Azure.Maps.Creator.dll</HintPath>
     </Reference>
     <Reference Include="Azure.Maps.Render">
-      <HintPath>..\..\..\azure-sdk-net-vnb\maps\Azure.Maps.Render\src\bin\Debug\netstandard2.0\Azure.Maps.Render.dll</HintPath>
+      <HintPath>..\..\..\azure-sdk-for-net-vnb\maps\Azure.Maps.Render\src\bin\Debug\netstandard2.0\Azure.Maps.Render.dll</HintPath>
     </Reference>
   </ItemGroup>
 
