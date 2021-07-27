@@ -9,9 +9,9 @@ using BlazorMapsCreator.Models;
 
 using RestSharp;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDatasetsPage : ListPageBase<DatasetDetailInfo>
+    public partial class ListDatasetsPage : BasePage<DatasetDetailInfo>
     {
         private DatasetListResponse datasetResponse;
 

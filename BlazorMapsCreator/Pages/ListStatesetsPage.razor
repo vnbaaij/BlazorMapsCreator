@@ -1,17 +1,17 @@
-﻿@page "/ListDataPage"
-@inherits ListPageBase<MapDataDetailInfo>
+﻿@page "/ListStatesetsPage"
+@inherits BasePage<StatesetInfoObject>
 @using BlazorMapsCreator.Models
 
-<h3>Uploaded data</h3>
+<h3>Feature statesets</h3>
 
 @if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
         <DetailsList ItemsSource="itemList"
                      Columns="Columns"
-                     GetKey=@(item=>item.udid)
+                     GetKey=@(item=>item.statesetId)
                      LayoutMode="DetailsListLayoutMode.Justified"
-                     TItem="MapDataDetailInfo"
+                     TItem="StatesetInfoObject"
                      OnItemInvoked="OnClick"
                      Selection="Selection"
                      SelectionMode="SelectionMode.Multiple">
@@ -22,15 +22,20 @@
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
+        <StackItem>
+            <DefaultButton @onclick="Get" Disabled="Selection.Count!=1">Get</DefaultButton>
+        </StackItem>
     </Stack>
 }
 else
 {
-    <p>No 'uploaded data' found!</p>
+    <p>No 'feature statesets' found!</p>
 }
 <hr />
+<p>@details</p>
 @foreach (string message in messages)
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
 }
+
 

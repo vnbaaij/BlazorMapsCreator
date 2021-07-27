@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Components;
 
 using RestSharp;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListStatesetsPage : ListPageBase<StatesetInfoObject>
+    public partial class ListStatesetsPage : BasePage<StatesetInfoObject>
     {
         private StatesetListResponse statesetResponse;
 

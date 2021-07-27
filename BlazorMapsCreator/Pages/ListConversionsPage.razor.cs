@@ -9,9 +9,9 @@ using BlazorMapsCreator.Models;
 
 using RestSharp;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListConversionsPage : ListPageBase<ConversionListDetailInfo>
+    public partial class ListConversionsPage : BasePage<ConversionListDetailInfo>
     {
         private ConversionListResponse conversionListResponse;
 

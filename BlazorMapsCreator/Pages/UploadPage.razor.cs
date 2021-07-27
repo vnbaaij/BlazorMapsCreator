@@ -28,6 +28,7 @@ namespace BlazorMapsCreator.Pages
         private string subscriptionkey;
         private string statusUrl;
         private string udid;
+
         private MapDataDetailInfo metadata;
         private readonly long maxFileSize = 1024 * 1024 * 10;
         protected override void OnAfterRender(bool firstRender)
@@ -52,7 +53,7 @@ namespace BlazorMapsCreator.Pages
                 await e.File.OpenReadStream(maxFileSize).CopyToAsync(fs);
                 fs.Close();
 
-                await MapDataUpload(path);
+                await DataUpload(path);
 
                 File.Delete(path);
             }
@@ -63,11 +64,13 @@ namespace BlazorMapsCreator.Pages
 
         }
 
-        private async Task MapDataUpload(string path)
+        private async Task DataUpload(string path)
         {
             byte[] mapBytes = File.ReadAllBytes(path);
 
-            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat=dwgzippackage&subscription-key={subscriptionkey}")
+            string uploadDataFormat = path.EndsWith("zip") ? "dwgzippackage" : "geojson";
+
+            RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat={uploadDataFormat}&subscription-key={subscriptionkey}")
             {
                 Timeout = -1
             };
@@ -83,7 +86,7 @@ namespace BlazorMapsCreator.Pages
             }
         }
 
-        public async Task MapDataUploadStatus()
+        public async Task DataUploadStatus()
         {
             if (string.IsNullOrEmpty(statusUrl))
                 statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
@@ -108,7 +111,7 @@ namespace BlazorMapsCreator.Pages
                 {
                     udid = "checking again in 15 seconds...";
                     await Task.Delay(15000);
-                    await MapDataUploadStatus();
+                    await DataUploadStatus();
                 }
             }
         }
@@ -129,7 +132,7 @@ namespace BlazorMapsCreator.Pages
             }
         }
 
-        private void MapDataDelete()
+        private void DataDelete()
         {
             RestClient client = new($"https://{geography}.atlas.microsoft.com/mapData/{udid}?api-version=2.0&subscription-key={subscriptionkey}")
             {

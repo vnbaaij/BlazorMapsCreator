@@ -10,20 +10,20 @@
 
 <p>
 <label>
-    Upload a zip file containing the DWG files and a manifest.json:<br /><br />
+    Upload either a zip file (containing the DWG file(s) and a manifest.json) or a GeoJson file<br /><br />
     <InputFile OnChange="@LoadFile" />
 </label>
 </p>
 <br />
 <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="width:100%;">
     <StackItem>
-        <DefaultButton @onclick="MapDataUploadStatus" Disabled="@uploadButtonDisabled">Upload Map Data Status</DefaultButton>
+        <DefaultButton @onclick="DataUploadStatus" Disabled="@uploadButtonDisabled">Upload Map Data Status</DefaultButton>
     </StackItem>
     <StackItem>
         <DefaultButton @onclick="MapDataMetadata" Disabled="@metadataButtonDisabled">Map Data Metadata</DefaultButton>
     </StackItem>
     <StackItem>
-        <DefaultButton @onclick="MapDataDelete" Disabled="@deleteButtonDisabled">Delete Map Data</DefaultButton>
+        <DefaultButton @onclick="DataDelete" Disabled="@deleteButtonDisabled">Delete Map Data</DefaultButton>
     </StackItem>
 </Stack>
 

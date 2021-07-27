@@ -9,9 +9,9 @@ using BlazorMapsCreator.Models;
 
 using RestSharp;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListAliasesPage : ListPageBase<AliasListItem>
+    public partial class ListAliasesPage : BasePage<AliasListItem>
     {
         private AliasListResponse aliasListResponse;
 

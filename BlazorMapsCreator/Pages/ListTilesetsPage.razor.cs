@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Components;
 
 using RestSharp;
 
-namespace BlazorMapsCreator.Pages.Lists
+namespace BlazorMapsCreator.Pages
 {
-    public partial class ListTilesetsPage : ListPageBase<TilesetDetailInfo>
+    public partial class ListTilesetsPage : BasePage<TilesetDetailInfo>
     {
         private TilesetListResponse tilesetResponse;
 

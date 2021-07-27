@@ -1,17 +1,17 @@
-﻿@page "/ListAliasesPage"
-@inherits ListPageBase<AliasListItem>
+﻿@page "/ListDataPage"
+@inherits BasePage<MapDataDetailInfo>
 @using BlazorMapsCreator.Models
 
-<h3>Aliases</h3>
+<h3>Uploaded data</h3>
 
 @if (itemList != null)
 {
     <div data-is-scrollable="true" style="height:300px;overflow-y:auto; width:100%">
         <DetailsList ItemsSource="itemList"
                  Columns="Columns"
-                 GetKey=@(item=>item.aliasId)
+                 GetKey=@(item=>item.udid)
                  LayoutMode="DetailsListLayoutMode.Justified"
-                 TItem="AliasListItem"
+                 TItem="MapDataDetailInfo"
                  OnItemInvoked="OnClick"
                  Selection="Selection"
                  SelectionMode="SelectionMode.Multiple">
@@ -22,13 +22,27 @@
         <StackItem>
             <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
+        <StackItem>
+            <DefaultButton @onclick="Get" Disabled="GetDisabled">Get info</DefaultButton>
+        </StackItem>
+        <StackItem>
+            @if (!string.IsNullOrEmpty(DownloadLink))
+            {
+                <a download href="@DownloadLink">Download</a>
+            }
+        </StackItem>
     </Stack>
 }
 else
 {
-    <p>No items found!</p>
+    <p>No 'uploaded data' found!</p>
 }
 <hr />
+<p>@details</p>
+@foreach (string error in errors)
+{
+    <MessageBar MessageBarType="MessageBarType.Error">@error</MessageBar>
+}
 @foreach (string message in messages)
 {
     <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
