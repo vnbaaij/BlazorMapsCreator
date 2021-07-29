@@ -5,19 +5,21 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 using BlazorFluentUI;
 
 using BlazorMapsCreator.Models;
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Hosting;
 
 using RestSharp;
 
 namespace BlazorMapsCreator.Pages
 {
-    public partial class ListDataPage : PageBase<MapDataDetailInfo>
+    public partial class DataPage : PageBase<MapDataDetailInfo>
     {
         [Inject] IWebHostEnvironment Environment { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService LocalStorage { get; set; }
@@ -26,7 +28,59 @@ namespace BlazorMapsCreator.Pages
 
         protected bool GetDisabled = true;
         protected string DownloadLink = "";
+        private string statusUrl;
+        private string udid;
 
+        private MapDataDetailInfo metadata;
+        private readonly long maxFileSize = 1024 * 1024 * 10;
+
+        private async Task LoadFile(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                string trustedFileNameForFileStorage = e.File.Name;
+                string path = Path.Combine(Environment.ContentRootPath, Environment.EnvironmentName, "unsafe_uploads", trustedFileNameForFileStorage);
+
+                await using FileStream fs = new(path, FileMode.Create);
+                await e.File.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                fs.Close();
+
+                await DataUpload(path);
+
+                File.Delete(path);
+
+                GetData();
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+
+            }
+
+        }
+
+        private async Task DataUpload(string path)
+        {
+            byte[] mapBytes = File.ReadAllBytes(path);
+
+            string uploadDataFormat = path.EndsWith("zip") ? "dwgzippackage" : "geojson";
+
+            RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat={uploadDataFormat}&subscription-key={SubscriptionKey}")
+            {
+                Timeout = -1
+            };
+            RestRequest request = new(Method.POST);
+            request.AddHeader("Content-Type", "application/octet-stream");
+            request.AddParameter("", mapBytes, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            if (response.IsSuccessful)
+            {
+                statusUrl = response.Headers.FirstOrDefault(p => p.Name == "Operation-Location").Value.ToString();
+                await LocalStorage.SetItemAsync("statusUrl", statusUrl);
+                // uploadButtonDisabled = false;
+            }
+
+        }
         private void GetData()
         {
 

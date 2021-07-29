@@ -2,6 +2,15 @@
 @inherits PageBase<MapDataDetailInfo>
 @using BlazorMapsCreator.Models
 
+<h3>Upload a Drawing Package</h3>
+
+<p>
+<label>
+    Upload either a zip file (containing the DWG file(s) and a manifest.json) or a GeoJson file<br /><br />
+    <InputFile OnChange="@LoadFile" />
+</label>
+</p>
+<hr />
 <h3>Uploaded data</h3>
 
 @if (itemList != null)
