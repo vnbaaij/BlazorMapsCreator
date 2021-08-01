@@ -33,9 +33,9 @@ else
 }
 <hr />
 <p>@details</p>
-@foreach (string message in messages)
-{
-    <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
-}
 
+@foreach (MessageItem message in messages)
+{
+    <MessageBar @key=@message.Id MessageBarType="@message.MessageType">@message.Message</MessageBar>
+}
 

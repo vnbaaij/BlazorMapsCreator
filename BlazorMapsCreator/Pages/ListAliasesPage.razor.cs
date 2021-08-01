@@ -95,7 +95,7 @@ namespace BlazorMapsCreator.Pages
 
                 if (response.IsSuccessful)
                 {
-                    messages.Add($"Item with id '{item.aliasId}' has been deleted");
+                    messages.Add(new MessageItem($"Item with id '{item.aliasId}' has been deleted"));
                 }
                 itemList.Remove(item);
             }

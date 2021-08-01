@@ -75,7 +75,7 @@ namespace BlazorMapsCreator.Pages
 
                 if (response.IsSuccessful)
                 {
-                    messages.Add($"Data with '{item.statesetId}' has been deleted");
+                    messages.Add(new MessageItem($"Data with '{item.statesetId}' has been deleted"));
                 }
                 itemList.Remove(item);
             }

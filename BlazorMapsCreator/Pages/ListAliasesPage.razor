@@ -29,8 +29,9 @@ else
     <p>No items found!</p>
 }
 <hr />
-@foreach (string message in messages)
-{
-    <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
-}
+<p>@details</p>
 
+@foreach (MessageItem message in messages)
+{
+    <MessageBar @key=@message.Id MessageBarType="@message.MessageType">@message.Message</MessageBar>
+}

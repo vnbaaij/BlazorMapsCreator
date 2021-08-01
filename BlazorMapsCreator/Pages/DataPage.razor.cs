@@ -26,10 +26,11 @@ namespace BlazorMapsCreator.Pages
 
         private MapDataListResponse mapDataResponse;
 
+        private InputFile fileInput;
         protected bool GetDisabled = true;
         protected string DownloadLink = "";
         private string statusUrl;
-        private string udid;
+        private string status;
 
         private MapDataDetailInfo metadata;
         private readonly long maxFileSize = 1024 * 1024 * 10;
@@ -45,11 +46,13 @@ namespace BlazorMapsCreator.Pages
                 await e.File.OpenReadStream(maxFileSize).CopyToAsync(fs);
                 fs.Close();
 
-                await DataUpload(path);
+                status = "Uploading file...";
+                StateHasChanged();
+                await UploadData(path);
 
                 File.Delete(path);
 
-                GetData();
+                ListData();
                 StateHasChanged();
             }
             catch (Exception)
@@ -59,16 +62,13 @@ namespace BlazorMapsCreator.Pages
 
         }
 
-        private async Task DataUpload(string path)
+        private async Task UploadData(string path)
         {
             byte[] mapBytes = File.ReadAllBytes(path);
 
             string uploadDataFormat = path.EndsWith("zip") ? "dwgzippackage" : "geojson";
 
-            RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapData?api-version=2.0&dataFormat={uploadDataFormat}&subscription-key={SubscriptionKey}")
-            {
-                Timeout = -1
-            };
+            RestClient client = new($"{baseUrl}/mapData?api-version=2.0&dataFormat={uploadDataFormat}&subscription-key={SubscriptionKey}");
             RestRequest request = new(Method.POST);
             request.AddHeader("Content-Type", "application/octet-stream");
             request.AddParameter("", mapBytes, ParameterType.RequestBody);
@@ -78,16 +78,42 @@ namespace BlazorMapsCreator.Pages
                 statusUrl = response.Headers.FirstOrDefault(p => p.Name == "Operation-Location").Value.ToString();
                 await LocalStorage.SetItemAsync("statusUrl", statusUrl);
                 // uploadButtonDisabled = false;
+                await UploadDataStatus();
             }
-
         }
-        private void GetData()
+
+        public async Task UploadDataStatus()
+        {
+            if (string.IsNullOrEmpty(statusUrl))
+                statusUrl = await LocalStorage.GetItemAsync<string>("statusUrl");
+            RestClient client = new($"{statusUrl}&subscription-key={SubscriptionKey}");
+            RestRequest request = new(Method.GET);
+            IRestResponse response = client.Execute(request);
+
+            if (response.IsSuccessful)
+            {
+                var para = response.Headers.FirstOrDefault(p => p.Name == "Resource-Location");
+                if (para is not null)
+                {
+                    Uri resourceLocation = new(para.Value.ToString());
+                    string udid = resourceLocation.Segments[^1];
+                    status = $"{udid} uploaded!";
+                    await LocalStorage.SetItemAsync("upload-udid", udid);
+                    messages.Add(new MessageItem($"Data with id '{udid}' has been uploaded", MessageBarType.Success));
+                }
+                else
+                {
+                    status = "checking again in 15 seconds...";
+                    await Task.Delay(15000);
+                    await UploadDataStatus();
+                }
+            }
+        }
+
+        private void ListData()
         {
 
-            RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapdata?subscription-key={SubscriptionKey}&api-version=2.0")
-            {
-                Timeout = -1
-            };
+            RestClient client = new($"{baseUrl}/mapdata?subscription-key={SubscriptionKey}&api-version=2.0");
             RestRequest request = new(Method.GET);
 
             IRestResponse response = client.Execute(request);
@@ -130,9 +156,11 @@ namespace BlazorMapsCreator.Pages
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Location", x => x.location!) { Index = 6, MaxWidth = 450, IsResizable = true });
             Columns.Add(new DetailsRowColumn<MapDataDetailInfo>("Description", x => x.description) { Index = 7 });
 
-            GetData();
+            ListData();
 
             Selection.OnSelectionChanged += Selection_OnSelectionChanged;
+
+            messages.Clear();
         }
 
         private void OrderCreated(IDetailsRowColumn<MapDataDetailInfo> column)
@@ -171,23 +199,20 @@ namespace BlazorMapsCreator.Pages
             StateHasChanged();
         }
 
-        private void Delete()
+        private void DeleteData()
         {
             messages.Clear();
 
             foreach (MapDataDetailInfo item in Selection.GetSelection())
             {
-                RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapdata/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0")
-                {
-                    Timeout = -1
-                };
+                RestClient client = new($"{baseUrl}/mapdata/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0");
                 RestRequest request = new(Method.DELETE);
 
                 IRestResponse response = client.Execute(request);
 
                 if (response.IsSuccessful)
                 {
-                    messages.Add($"Data with '{item.udid}' has been deleted");
+                    messages.Add(new MessageItem($"Data with id '{item.udid}' has been deleted"));
                 }
 
                 //Also delete any dowloaded version of the data
@@ -221,25 +246,20 @@ namespace BlazorMapsCreator.Pages
             StateHasChanged();
         }
 
-        private void Get()
+        private void GetDataDetailInfo()
         {
-            messages.Clear();
-
             MapDataDetailInfo item = Selection.GetSelection()[0];
 
             if (item.uploadStatus.ToLowerInvariant() != "completed")
             {
-                messages.Add($"Data with '{item.udid}' has not finished uploading");
+                messages.Add(new($"Data with '{item.udid}' has not finished uploading", MessageBarType.Warning));
                 return;
             }
 
             // Store udid of selected item in local storage so that a conversion can be started later.
             LocalStorage.SetItemAsync("upload-udid", item.udid);
 
-            RestClient client = new($"https://{Geography}.atlas.microsoft.com/mapData/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0")
-            {
-                Timeout = -1
-            };
+            RestClient client = new($"{baseUrl}/mapData/{item.udid}?subscription-key={SubscriptionKey}&api-version=2.0");
 
             RestRequest request = new(Method.GET);
 
@@ -270,7 +290,7 @@ namespace BlazorMapsCreator.Pages
             IRestResponse response = client.Execute(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
-                errors.Add("Something went wrong while getting the resource from Azure Maps");
+                messages.Add(new MessageItem("Something went wrong while getting the resource from Azure Maps", MessageBarType.Error));
 
             // Read bytes
             byte[] fileBytes = response.RawBytes;

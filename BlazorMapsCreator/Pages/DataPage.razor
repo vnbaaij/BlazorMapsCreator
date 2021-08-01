@@ -1,4 +1,4 @@
-﻿@page "/ListDataPage"
+﻿@page "/DataPage"
 @inherits PageBase<MapDataDetailInfo>
 @using BlazorMapsCreator.Models
 
@@ -7,9 +7,10 @@
 <p>
 <label>
     Upload either a zip file (containing the DWG file(s) and a manifest.json) or a GeoJson file<br /><br />
-    <InputFile OnChange="@LoadFile" />
+    <InputFile @ref=fileInput OnChange="@LoadFile"  />
 </label>
 </p>
+Status: @status<br />
 <hr />
 <h3>Uploaded data</h3>
 
@@ -29,10 +30,10 @@
 
     <Stack Horizontal="true" Tokens=@(new StackTokens() { ChildrenGap = new[] { 40.0 } }) Style="margin-top:25px; margin-bottom:25px; width:100%;">
         <StackItem>
-            <DefaultButton @onclick="Delete" Disabled="Selection.Count==0">Delete</DefaultButton>
+            <DefaultButton @onclick="DeleteData" Disabled="Selection.Count==0">Delete</DefaultButton>
         </StackItem>
         <StackItem>
-            <DefaultButton @onclick="Get" Disabled="GetDisabled">Get info</DefaultButton>
+            <DefaultButton @onclick="GetDataDetailInfo" Disabled="GetDisabled">Get info</DefaultButton>
         </StackItem>
         <StackItem>
             @if (!string.IsNullOrEmpty(DownloadLink))
@@ -48,12 +49,9 @@ else
 }
 <hr />
 <p>@details</p>
-@foreach (string error in errors)
+
+@foreach (MessageItem message in messages)
 {
-    <MessageBar MessageBarType="MessageBarType.Error">@error</MessageBar>
-}
-@foreach (string message in messages)
-{
-    <MessageBar MessageBarType="MessageBarType.Success">@message</MessageBar>
+    <MessageBar @key=@message.Id MessageBarType="@message.MessageType">@message.Message</MessageBar>
 }
 

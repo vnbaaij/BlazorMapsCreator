@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using BlazorFluentUI;
 
+using BlazorMapsCreator.Models;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 
@@ -14,12 +16,13 @@ namespace BlazorMapsCreator.Pages
 
         protected MarkupString details;
 
-        protected List<string> messages = new();
-        protected List<string> errors = new();
+        protected List<MessageItem> messages = new();
 
         protected List<TItem> itemList;
         protected List<IDetailsRowColumn<TItem>> Columns = new();
         protected Selection<TItem> Selection = new();
+
+        protected string baseUrl;
 
         protected string Geography { get; set; }
         protected string SubscriptionKey { get; set; }
@@ -27,8 +30,9 @@ namespace BlazorMapsCreator.Pages
         protected override void OnInitialized()
         {
             Geography = Configuration["AzureMaps:Geography"];
-
             SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"];
+
+            baseUrl = $"https://{Geography}.atlas.microsoft.com";
 
             base.OnInitialized();
         }
