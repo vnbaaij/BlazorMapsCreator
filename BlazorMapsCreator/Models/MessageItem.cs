@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 using BlazorFluentUI;
 
@@ -7,7 +6,7 @@ namespace BlazorMapsCreator.Models
 {
     public class MessageItem
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; } = Guid.NewGuid().ToString().Replace("-", "");
         public string Message { get; set; }
         public MessageBarType MessageType { get; set; }
 

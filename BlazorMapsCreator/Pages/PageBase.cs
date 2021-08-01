@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using BlazorFluentUI;
-
 using BlazorMapsCreator.Models;
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 
