@@ -5,12 +5,13 @@
 <h3>Upload a Drawing Package</h3>
 
 <p>
-<label>
-    Upload either a zip file (containing the DWG file(s) and a manifest.json) or a GeoJson file<br /><br />
-    <InputFile @ref=fileInput OnChange="@LoadFile"  />
-</label>
+    <label>
+        Upload either a zip file (containing the DWG file(s) and a manifest.json) or a GeoJson file<br /><br />
+        <InputFile OnChange="@LoadFile" />
+    </label>
 </p>
-Status: @status<br />
+Status: @status
+<br />
 <hr />
 <h3>Uploaded data</h3>
 
@@ -49,7 +50,6 @@ else
 }
 <hr />
 <p>@details</p>
-
 @foreach (MessageItem message in messages)
 {
     <MessageBar @key=@message.Id MessageBarType="@message.MessageType">@message.Message</MessageBar>

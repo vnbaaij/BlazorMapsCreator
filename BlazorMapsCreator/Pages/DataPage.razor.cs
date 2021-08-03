@@ -26,13 +26,11 @@ namespace BlazorMapsCreator.Pages
 
         private MapDataListResponse mapDataResponse;
 
-        private InputFile fileInput;
         protected bool GetDisabled = true;
         protected string DownloadLink = "";
         private string statusUrl;
         private string status;
 
-        private MapDataDetailInfo metadata;
         private readonly long maxFileSize = 1024 * 1024 * 10;
 
         private async Task LoadFile(InputFileChangeEventArgs e)
